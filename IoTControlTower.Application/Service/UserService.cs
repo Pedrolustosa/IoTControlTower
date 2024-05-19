@@ -19,28 +19,39 @@ namespace IoTControlTower.Application.Service
 
         public async Task<bool> Post(UserRegisterDTO userRegisterDTO, string role)
         {
-            var hasUser = GetUserName(userRegisterDTO.UserName);
-            if(hasUser.Result)
-                throw new Exception("Have this User");
+            // Verificar se o usuário já existe
+            var hasUser = await GetUserName(userRegisterDTO.UserName);
+            if (hasUser)
+                throw new Exception("User already exists.");
 
+            // Mapear DTO para entidade de usuário
             var user = _mapper.Map<User>(userRegisterDTO);
             if (user is not null)
             {
+                // Verificar se o e-mail já existe
                 var userExist = await _userManager.FindByEmailAsync(user.Email);
-                if (userExist != null) throw new Exception("Email already exists.");
+                if (userExist != null)
+                    throw new Exception("Email already exists.");
+
+                // Verificar se a função (role) existe
                 if (await _roleManager.RoleExistsAsync(role))
                 {
+                    // Criar o usuário e atribuir a função
                     var result = await _userManager.CreateAsync(user, userRegisterDTO.Password);
-                    if (!result.Succeeded) throw new Exception("Error!");
+                    if (!result.Succeeded)
+                        throw new Exception("Failed to create user.");
+
                     await _userManager.AddToRoleAsync(user, role);
-                    return result.Succeeded;
+                    return true;
                 }
                 else
-                    throw new Exception("Please, choose a role for this user!");
+                {
+                    throw new Exception("Please choose a valid role for this user.");
+                }
             }
             else
             {
-                throw new Exception("CPF or Age Invalid");
+                throw new Exception("Invalid user data.");
             }
         }
 

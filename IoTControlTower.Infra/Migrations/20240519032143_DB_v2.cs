@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace IoTControlTower.Infra.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialDB : Migration
+    public partial class DB_v2 : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -64,21 +64,6 @@ namespace IoTControlTower.Infra.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Commands", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Devices",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Description = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: false),
-                    Manufacturer = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
-                    Url = table.Column<string>(type: "nvarchar(max)", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Devices", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -188,6 +173,28 @@ namespace IoTControlTower.Infra.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Devices",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Description = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: false),
+                    Manufacturer = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    Url = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Devices", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Devices_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Parameters",
                 columns: table => new
                 {
@@ -244,8 +251,8 @@ namespace IoTControlTower.Infra.Migrations
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
                 values: new object[,]
                 {
-                    { "3ba49338-0d92-4bda-b17d-63ded8c44b43", "1", "Admin", "Admin" },
-                    { "b0f84dc2-d6ba-4b00-98fd-51a1b4cc792f", "2", "User", "User" }
+                    { "29505e5e-619e-4b5e-94b7-fd5aecc650fa", "2", "User", "User" },
+                    { "35163c06-9050-4077-b8c7-1e56b7f980d6", "1", "Admin", "Admin" }
                 });
 
             migrationBuilder.CreateIndex(
@@ -298,6 +305,11 @@ namespace IoTControlTower.Infra.Migrations
                 column: "DeviceId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Devices_UserId",
+                table: "Devices",
+                column: "UserId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Parameters_CommandId",
                 table: "Parameters",
                 column: "CommandId");
@@ -331,13 +343,13 @@ namespace IoTControlTower.Infra.Migrations
                 name: "AspNetRoles");
 
             migrationBuilder.DropTable(
-                name: "AspNetUsers");
-
-            migrationBuilder.DropTable(
                 name: "Devices");
 
             migrationBuilder.DropTable(
                 name: "Commands");
+
+            migrationBuilder.DropTable(
+                name: "AspNetUsers");
         }
     }
 }

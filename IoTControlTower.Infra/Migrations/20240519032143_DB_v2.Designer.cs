@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace IoTControlTower.Infra.Migrations
 {
     [DbContext(typeof(IoTControlTowerContext))]
-    [Migration("20240519020555_DB_v1")]
-    partial class DB_v1
+    [Migration("20240519032143_DB_v2")]
+    partial class DB_v2
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -112,7 +112,13 @@ namespace IoTControlTower.Infra.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("Devices");
                 });
@@ -243,14 +249,14 @@ namespace IoTControlTower.Infra.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "786d1a16-3a18-4051-9ab3-b7573977bc26",
+                            Id = "35163c06-9050-4077-b8c7-1e56b7f980d6",
                             ConcurrencyStamp = "1",
                             Name = "Admin",
                             NormalizedName = "Admin"
                         },
                         new
                         {
-                            Id = "5f15d1f7-273c-43fa-8011-ae99c68b41a6",
+                            Id = "29505e5e-619e-4b5e-94b7-fd5aecc650fa",
                             ConcurrencyStamp = "2",
                             Name = "User",
                             NormalizedName = "User"
@@ -382,6 +388,17 @@ namespace IoTControlTower.Infra.Migrations
                     b.Navigation("Device");
                 });
 
+            modelBuilder.Entity("IoTControlTower.Domain.Entities.Device", b =>
+                {
+                    b.HasOne("IoTControlTower.Domain.Entities.User", "User")
+                        .WithMany("Devices")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("IoTControlTower.Domain.Entities.Parameter", b =>
                 {
                     b.HasOne("IoTControlTower.Domain.Entities.Command", "Command")
@@ -454,6 +471,11 @@ namespace IoTControlTower.Infra.Migrations
             modelBuilder.Entity("IoTControlTower.Domain.Entities.Device", b =>
                 {
                     b.Navigation("CommandDescriptions");
+                });
+
+            modelBuilder.Entity("IoTControlTower.Domain.Entities.User", b =>
+                {
+                    b.Navigation("Devices");
                 });
 #pragma warning restore 612, 618
         }

@@ -15,16 +15,23 @@ namespace IoTControlTower.API.Controllers
         [HttpPost("Authenticate")]
         public async Task<ActionResult<UserToken>> Authenticate([FromBody] LoginDTO loginDTO)
         {
-            var result = await _authentication.Authenticate(loginDTO.UserName, loginDTO.Password);
-            if (result)
+            try
             {
-                var token = _authentication.GenerateToken(loginDTO.UserName);
-                return new UserToken { Token = token };
+                var result = await _authentication.Authenticate(loginDTO.UserName, loginDTO.Password);
+                if (result)
+                {
+                    var token = await _authentication.GenerateToken(loginDTO);
+                    return new UserToken { Token = token };
+                }
+                else
+                {
+                    ModelState.AddModelError(string.Empty, "Invalid Login attempt.");
+                    return BadRequest(ModelState);
+                }
             }
-            else
+            catch (Exception)
             {
-                ModelState.AddModelError(string.Empty, "Invalid Login attempt.");
-                return BadRequest(ModelState);
+                throw;
             }
         }
     }

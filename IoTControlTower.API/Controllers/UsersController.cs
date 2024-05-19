@@ -3,7 +3,6 @@ using IoTControlTower.Application.DTO;
 using IoTControlTower.Application.Interface;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System.Data;
 
 namespace IoTControlTower.API.Controllers
 {
@@ -15,15 +14,25 @@ namespace IoTControlTower.API.Controllers
 
         [HttpPost("RegisterUser")]
         [Authorize(Roles = "Admin")]
-        public async Task<ActionResult<UserToken>> Post([FromBody] UserRegisterDTO applicationUserRegisterDTO, string role)
+        public async Task<ActionResult<UserToken>> Post([FromBody] UserRegisterDTO userRegisterDTO, string role)
         {
-            var result = await _userService.Post(applicationUserRegisterDTO, role);
-            if (result)
-                return Ok($"User {applicationUserRegisterDTO.Email} was created with success!");
-            else
+            try
             {
-                ModelState.AddModelError(string.Empty, "Invalid Login attempt.");
-                return BadRequest(ModelState);
+                if (!ModelState.IsValid)
+                    return BadRequest(ModelState);
+
+                var result = await _userService.Post(userRegisterDTO, role);
+                if (result)
+                    return Ok($"User {userRegisterDTO.Email} was created with success!");
+                else
+                {
+                    ModelState.AddModelError(string.Empty, "Invalid Login attempt.");
+                    return BadRequest(ModelState);
+                }
+            }
+            catch (Exception)
+            {
+                throw;
             }
         }
     }

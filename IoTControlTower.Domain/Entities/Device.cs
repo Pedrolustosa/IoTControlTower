@@ -7,6 +7,9 @@
         public string Manufacturer { get; set; }
         public string Url { get; set; }
 
+        public string UserId { get; set; }
+        public User User { get; set; }
+
         public ICollection<CommandDescription> CommandDescriptions { get; set; }
     }
 }

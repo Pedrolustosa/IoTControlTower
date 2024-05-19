@@ -1,9 +1,11 @@
-﻿namespace IoTControlTower.Application.Interface
+﻿using IoTControlTower.Application.DTO;
+
+namespace IoTControlTower.Application.Interface
 {
     public interface IAuthenticateService
     {
         Task<bool> Authenticate(string email, string password);
 
-        public string GenerateToken(string email);
+        Task<string> GenerateToken(LoginDTO loginDTO);
     }
 }

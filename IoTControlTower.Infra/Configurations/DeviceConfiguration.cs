@@ -16,6 +16,11 @@ namespace IoTControlTower.Infra.Configurations
             builder.HasMany(d => d.CommandDescriptions)
                    .WithOne(c => c.Device)
                    .HasForeignKey(c => c.DeviceId);
+
+            builder.HasOne(d => d.User)
+                   .WithMany(u => u.Devices)
+                   .HasForeignKey(d => d.UserId)
+                   .IsRequired();
         }
     }
 }

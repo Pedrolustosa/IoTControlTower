@@ -12,7 +12,7 @@ namespace IoTControlTower.Infra.IoC
             {
                 options.SwaggerDoc("v1", new OpenApiInfo
                 {
-                    Title = "ControlPersonalData.API",
+                    Title = "IoTControlTower.API",
                     Version = "v1",
                     Contact = new OpenApiContact
                     {
