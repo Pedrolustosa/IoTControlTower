@@ -9,5 +9,6 @@ namespace IoTControlTower.Application.Interface
         Task<DeviceDTO> CreateDevice(DeviceDTO deviceDto);
         Task<DeviceDTO> UpdateDevice(DeviceDTO deviceDto);
         Task<bool> DeleteDevice(int id);
+        Task<DashboardSummaryDTO> GetDashboardSummary();
     }
 }

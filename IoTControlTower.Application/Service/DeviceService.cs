@@ -2,7 +2,6 @@
 using IoTControlTower.Domain.Interface;
 using IoTControlTower.Application.Interface;
 using AutoMapper;
-using IoTControlTower.Infra.Context;
 using IoTControlTower.Domain.Entities;
 
 namespace IoTControlTower.Application.Service
@@ -14,39 +13,85 @@ namespace IoTControlTower.Application.Service
 
         public async Task<IEnumerable<DeviceDTO>> GetDevices()
         {
-            var devices = await _deviceRepository.GetAllAsync();
-            return _mapper.Map<IEnumerable<DeviceDTO>>(devices);
+            try
+            {
+                var devices = await _deviceRepository.GetAllAsync();
+                return _mapper.Map<IEnumerable<DeviceDTO>>(devices);
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
         }
 
         public async Task<DeviceDTO> GetDeviceById(int id)
         {
-            var device = await _deviceRepository.GetByIdAsync(id);
-            return _mapper.Map<DeviceDTO>(device);
+            try
+            {
+                var device = await _deviceRepository.GetByIdAsync(id);
+                return _mapper.Map<DeviceDTO>(device);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
         }
 
         public async Task<DeviceDTO> CreateDevice(DeviceDTO deviceDto)
         {
-            var device = _mapper.Map<Device>(deviceDto);
-            await _deviceRepository.AddAsync(device);
-            return _mapper.Map<DeviceDTO>(device);
+            try
+            {
+                var device = _mapper.Map<Device>(deviceDto);
+                await _deviceRepository.AddAsync(device);
+                return _mapper.Map<DeviceDTO>(device);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
         }
 
         public async Task<DeviceDTO> UpdateDevice(DeviceDTO deviceDto)
         {
-            var device = _mapper.Map<Device>(deviceDto);
-            await _deviceRepository.UpdateAsync(device);
-            return _mapper.Map<DeviceDTO>(device);
+            try
+            {
+                var device = _mapper.Map<Device>(deviceDto);
+                await _deviceRepository.UpdateAsync(device);
+                return _mapper.Map<DeviceDTO>(device);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
         }
 
         public async Task<bool> DeleteDevice(int id)
         {
-            var device = await _deviceRepository.GetByIdAsync(id);
-            if (device == null) return false;
-
-            await _deviceRepository.DeleteAsync(device);
-            return true;
+            try
+            {
+                var device = await _deviceRepository.GetByIdAsync(id);
+                if (device == null) return false;
+                await _deviceRepository.DeleteAsync(device);
+                return true;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
         }
 
-        
+        public async Task<DashboardSummaryDTO> GetDashboardSummary()
+        {
+            try
+            {
+                var dashboard = _deviceRepository.GetDashboardSummary();
+                return _mapper.Map<DashboardSummaryDTO>(dashboard);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
     }
 }

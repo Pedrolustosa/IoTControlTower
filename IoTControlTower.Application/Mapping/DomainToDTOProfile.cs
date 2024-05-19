@@ -14,6 +14,7 @@ namespace IoTControlTower.Application.Mapping
             CreateMap<Parameter, ParameterDTO>().ReverseMap();
             CreateMap<User, UserDTO>().ReverseMap();
             CreateMap<User, UserRegisterDTO>().ReverseMap();
+            CreateMap<DashboardSummary, DashboardSummaryDTO>().ReverseMap();
         }
     }
 }

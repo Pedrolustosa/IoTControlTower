@@ -10,5 +10,7 @@ namespace IoTControlTower.Domain.Interface
         Task AddAsync(Device device);
         Task UpdateAsync(Device device);
         Task DeleteAsync(Device device);
+
+        Task<DashboardSummary> GetDashboardSummary();
     }
 }
