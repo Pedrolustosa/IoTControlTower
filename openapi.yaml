@@ -1,0 +1,48 @@
+info:
+  title: Community IoT Device (CIoTD)
+  description: >
+    <p>A CIoTD é uma plataforma colaborativa para compartilhamento de acesso à dados
+    de dispositivos IoT.</p>
+    <p>Através dela, colaboradores podem cadastrar seus dispositivos, permitindo
+    que qualquer pessoa possa coletar os dados desses dispositivos e utilizar em suas
+    aplicações.</p>
+  version: 1.0.0
+tags:
+  - name: Devices
+    description: Provê operações para cadastramento e gerenciamento de dispositivos
+paths:
+  /api/devices:
+    get:
+      summary: Retorna uma lista de dispositivos cadastrados na plataforma
+      tags:
+        - Devices
+      responses:
+        '200':
+          description: Requisição executada com sucesso
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/DeviceDTO'
+components:
+  schemas:
+    DeviceDTO:
+      type: object
+      properties:
+        id:
+          type: integer
+        description:
+          type: string
+          description: Descrição do dispositivo, incluindo detalhes do seu uso e das informações geradas
+        manufacturer:
+          type: string
+          description: Nome do fabricante do dispositivo
+        url:
+          type: string
+          description: URL de acesso ao dispositivo
+        commands:
+          type: array
+          description: Lista de comandos disponibilizada pelo dispositivo
+          items:
+            $ref: '#/components/schemas/CommandDescriptionDTO'
