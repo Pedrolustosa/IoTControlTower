@@ -30,11 +30,12 @@ namespace IoTControlTower.Application.Service
                 if (user is not null)
                 {
                     var userExist = await _userManager.FindByEmailAsync(user.Email);
-                    if (userExist != null)
+                    if (userExist is not null)
                         throw new Exception("Email already exists.");
 
                     if (await _roleManager.RoleExistsAsync(role))
                     {
+                        userRegisterDTO.RegistrationDate = DateTime.Now;
                         var result = await _userManager.CreateAsync(user, userRegisterDTO.Password);
                         if (!result.Succeeded)
                             throw new Exception("Failed to create user.");

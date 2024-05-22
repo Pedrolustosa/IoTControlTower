@@ -56,7 +56,7 @@ namespace IoTControlTower.Application.Service
 
                 var privateKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:SecretKey"]));
                 var credentials = new SigningCredentials(privateKey, SecurityAlgorithms.HmacSha256);
-                var expirations = DateTime.UtcNow.AddMinutes(7);
+                var expirations = DateTime.Now.AddMinutes(10);
 
                 JwtSecurityToken token = new
                 (

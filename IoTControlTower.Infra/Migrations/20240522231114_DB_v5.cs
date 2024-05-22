@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace IoTControlTower.Infra.Migrations
 {
     /// <inheritdoc />
-    public partial class DB_v4 : Migration
+    public partial class DB_v5 : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -33,6 +33,10 @@ namespace IoTControlTower.Infra.Migrations
                 {
                     Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     FullName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    RegistrationDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    LastLogin = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    Address = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Country = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     UserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     NormalizedUserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     Email = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
@@ -252,8 +256,8 @@ namespace IoTControlTower.Infra.Migrations
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
                 values: new object[,]
                 {
-                    { "57f6bff2-734f-49bf-ada1-ecf648c863cb", "1", "Admin", "Admin" },
-                    { "8f51ca16-29ab-4bf3-bda3-3470aa0edd8c", "2", "User", "User" }
+                    { "3820e684-a6d4-4e93-90ec-d3f5593b7436", "2", "User", "User" },
+                    { "d0c74314-c6e9-40cb-af20-b934c93137e7", "1", "Admin", "Admin" }
                 });
 
             migrationBuilder.CreateIndex(

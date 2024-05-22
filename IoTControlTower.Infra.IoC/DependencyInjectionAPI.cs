@@ -1,13 +1,16 @@
-﻿using IoTControlTower.Application.Interface;
-using IoTControlTower.Application.Mapping;
-using IoTControlTower.Application.Service;
+﻿using FluentValidation;
+using Microsoft.EntityFrameworkCore;
+using IoTControlTower.Infra.Context;
+using Microsoft.AspNetCore.Identity;
 using IoTControlTower.Domain.Entities;
 using IoTControlTower.Domain.Interface;
-using IoTControlTower.Infra.Context;
 using IoTControlTower.Infra.Repository;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+using IoTControlTower.Application.Mapping;
+using IoTControlTower.Application.Service;
+using IoTControlTower.Application.Validator;
+using IoTControlTower.Application.Interface;
+using IoTControlTower.Application.DTO.Device;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace IoTControlTower.Infra.IoC
@@ -21,6 +24,9 @@ namespace IoTControlTower.Infra.IoC
 
             services.AddIdentity<User, IdentityRole>().AddEntityFrameworkStores<IoTControlTowerContext>()
                                                       .AddDefaultTokenProviders();
+
+            //FluentValidator
+            services.AddTransient<IValidator<DeviceDTO>, DeviceValidator>();
 
             //Mappings
             services.AddAutoMapper(typeof(DomainToDTOProfile));

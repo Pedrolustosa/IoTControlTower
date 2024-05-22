@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using FluentValidation;
 using IoTControlTower.Application.DTO;
 using IoTControlTower.Domain.Entities;
 using IoTControlTower.Domain.Interface;
@@ -7,9 +8,10 @@ using IoTControlTower.Application.DTO.Device;
 
 namespace IoTControlTower.Application.Service
 {
-    public class DeviceService(IDevicesRepository devicesRepository, IMapper mapper) : IDeviceService
+    public class DeviceService(IDevicesRepository devicesRepository, IMapper mapper, IValidator<DeviceDTO> validator) : IDeviceService
     {
         private readonly IMapper _mapper = mapper;
+        private readonly IValidator<DeviceDTO> _validator = validator;
         private readonly IDevicesRepository _deviceRepository = devicesRepository;
 
         public async Task<IEnumerable<DeviceDTO>> GetDevices()
@@ -43,6 +45,13 @@ namespace IoTControlTower.Application.Service
         {
             try
             {
+                var validationResult = await _validator.ValidateAsync(deviceDto);
+                if (!validationResult.IsValid)
+                {
+                    var errors = validationResult.Errors.Select(error => error.ErrorMessage);
+                    throw new ArgumentException(string.Join(Environment.NewLine, errors));
+                }
+
                 var device = _mapper.Map<Device>(deviceDto);
                 await _deviceRepository.AddAsync(device);
                 return _mapper.Map<DeviceDTO>(device);
@@ -57,6 +66,13 @@ namespace IoTControlTower.Application.Service
         {
             try
             {
+                var validationResult = await _validator.ValidateAsync(deviceUpdateDto);
+                if (!validationResult.IsValid)
+                {
+                    var errors = validationResult.Errors.Select(error => error.ErrorMessage);
+                    throw new ArgumentException(string.Join(Environment.NewLine, errors));
+                }
+
                 var device = await _deviceRepository.GetByIdAsync(deviceUpdateDto.Id) ?? throw new ArgumentException($"Device with ID {deviceUpdateDto.Id} not found");
                 _mapper.Map(deviceUpdateDto, device);
                 await _deviceRepository.UpdateAsync(device);
@@ -72,8 +88,7 @@ namespace IoTControlTower.Application.Service
         {
             try
             {
-                var device = await _deviceRepository.GetByIdAsync(id);
-                if (device == null) return false;
+                var device = await _deviceRepository.GetByIdAsync(id) ?? throw new ArgumentException($"Device with ID {id} not found");
                 await _deviceRepository.DeleteAsync(device);
                 return true;
             }
