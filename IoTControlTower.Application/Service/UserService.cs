@@ -20,7 +20,7 @@ namespace IoTControlTower.Application.Service
         private readonly IMapper _mapper = mapper;
         
 
-        public async Task<bool> Post(UserRegisterDTO userRegisterDTO, string role)
+        public async Task<bool> CreateUser(UserRegisterDTO userRegisterDTO, string role)
         {
             try
             {

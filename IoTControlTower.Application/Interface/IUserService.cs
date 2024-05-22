@@ -6,6 +6,6 @@ namespace IoTControlTower.Application.Interface
     {
         string GetUserId();
         Task<bool> GetUserName(string userName);
-        Task<bool> Post(UserRegisterDTO applicationUserRegisterDTO, string role);
+        Task<bool> CreateUser(UserRegisterDTO applicationUserRegisterDTO, string role);
     }
 }
