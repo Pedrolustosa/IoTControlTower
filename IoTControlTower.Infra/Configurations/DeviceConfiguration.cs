@@ -1,6 +1,6 @@
-﻿using IoTControlTower.Domain.Entities;
+﻿using Microsoft.EntityFrameworkCore;
+using IoTControlTower.Domain.Entities;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using Microsoft.EntityFrameworkCore;
 
 namespace IoTControlTower.Infra.Configurations
 {
@@ -20,6 +20,7 @@ namespace IoTControlTower.Infra.Configurations
             builder.HasOne(d => d.User)
                    .WithMany(u => u.Devices)
                    .HasForeignKey(d => d.UserId)
+                   .OnDelete(DeleteBehavior.Cascade)
                    .IsRequired();
         }
     }

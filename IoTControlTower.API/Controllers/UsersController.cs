@@ -8,13 +8,13 @@ namespace IoTControlTower.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class UsersController(IUserService userService, ILogger logger) : ControllerBase
+    public class UsersController(IUserService userService, ILogger<UsersController> logger) : ControllerBase
     {
-        private readonly ILogger _logger = logger;
+        private readonly ILogger<UsersController> _logger = logger;
         private readonly IUserService _userService = userService;
 
         [HttpPost("RegisterUser")]
-        [Authorize(Roles = "Admin")]
+        [AllowAnonymous]
         public async Task<ActionResult<UserToken>> CreateUser([FromBody] UserRegisterDTO userRegisterDTO, string role)
         {
             _logger.LogInformation("CreateUser() - Registering a new user with email: {Email} and role: {Role}", userRegisterDTO.Email, role);

@@ -170,15 +170,15 @@ namespace IoTControlTower.Infra.Migrations
                     b.Property<bool>("EmailConfirmed")
                         .HasColumnType("bit");
 
+                    b.Property<string>("FullName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<bool>("LockoutEnabled")
                         .HasColumnType("bit");
 
                     b.Property<DateTimeOffset?>("LockoutEnd")
                         .HasColumnType("datetimeoffset");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("NormalizedEmail")
                         .HasMaxLength(256)
@@ -249,14 +249,14 @@ namespace IoTControlTower.Infra.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "d401fb67-8090-48a6-a197-a2f04564e5d8",
+                            Id = "57f6bff2-734f-49bf-ada1-ecf648c863cb",
                             ConcurrencyStamp = "1",
                             Name = "Admin",
                             NormalizedName = "Admin"
                         },
                         new
                         {
-                            Id = "f0ae37a8-c487-475e-b22f-e4bf5913e2ac",
+                            Id = "8f51ca16-29ab-4bf3-bda3-3470aa0edd8c",
                             ConcurrencyStamp = "2",
                             Name = "User",
                             NormalizedName = "User"

@@ -1,8 +1,9 @@
-﻿using IoTControlTower.Application.DTO;
+﻿using AutoMapper;
+using IoTControlTower.Application.DTO;
+using IoTControlTower.Domain.Entities;
 using IoTControlTower.Domain.Interface;
 using IoTControlTower.Application.Interface;
-using AutoMapper;
-using IoTControlTower.Domain.Entities;
+using IoTControlTower.Application.DTO.Device;
 
 namespace IoTControlTower.Application.Service
 {
@@ -52,13 +53,14 @@ namespace IoTControlTower.Application.Service
             }
         }
 
-        public async Task<DeviceDTO> UpdateDevice(DeviceDTO deviceDto)
+        public async Task<bool> UpdateDevice(DeviceUpdateDTO deviceUpdateDto)
         {
             try
             {
-                var device = _mapper.Map<Device>(deviceDto);
+                var device = await _deviceRepository.GetByIdAsync(deviceUpdateDto.Id) ?? throw new ArgumentException($"Device with ID {deviceUpdateDto.Id} not found");
+                _mapper.Map(deviceUpdateDto, device);
                 await _deviceRepository.UpdateAsync(device);
-                return _mapper.Map<DeviceDTO>(device);
+                return true;
             }
             catch (Exception)
             {
@@ -85,7 +87,7 @@ namespace IoTControlTower.Application.Service
         {
             try
             {
-                var dashboard = _deviceRepository.GetDashboardSummary();
+                var dashboard = await _deviceRepository.GetDashboardSummary();
                 return _mapper.Map<DashboardSummaryDTO>(dashboard);
             }
             catch (Exception)

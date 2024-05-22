@@ -1,8 +1,8 @@
-﻿using IoTControlTower.Domain.Interface;
-using IoTControlTower.Infra.Context;
+﻿using System.Security.Claims;
 using Microsoft.AspNetCore.Http;
+using IoTControlTower.Infra.Context;
 using Microsoft.EntityFrameworkCore;
-using System.Security.Claims;
+using IoTControlTower.Domain.Interface;
 
 namespace IoTControlTower.Infra.Repository
 {
@@ -11,11 +11,13 @@ namespace IoTControlTower.Infra.Repository
         private readonly IoTControlTowerContext _context = context;
         private readonly IHttpContextAccessor _httpContextAccessor = httpContextAccessor;
 
-        public string? GetUserId()
+        public async Task<string?> GetUserId()
         {
             try
             {
-                return _httpContextAccessor.HttpContext.User?.FindFirstValue(ClaimTypes.NameIdentifier);
+                var name = _httpContextAccessor.HttpContext.User?.FindFirstValue(ClaimTypes.Name);
+                var userId = await _context.Users.FirstOrDefaultAsync(x => x.FullName == name) ?? new();
+                return userId.Id;
             }
             catch (Exception)
             {

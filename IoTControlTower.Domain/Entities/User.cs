@@ -4,7 +4,7 @@ namespace IoTControlTower.Domain.Entities
 {
     public class User : IdentityUser
     {
-        public string Name { get; set; }
+        public string FullName { get; set; }
         public ICollection<Device> Devices { get; set; }
     }
 }

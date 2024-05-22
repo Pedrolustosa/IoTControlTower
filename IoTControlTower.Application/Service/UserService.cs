@@ -1,11 +1,9 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Identity;
 using IoTControlTower.Application.DTO;
-using IoTControlTower.Application.Interface;
 using IoTControlTower.Domain.Entities;
 using IoTControlTower.Domain.Interface;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Identity;
-using System.Security.Claims;
+using IoTControlTower.Application.Interface;
 
 namespace IoTControlTower.Application.Service
 {
@@ -24,24 +22,19 @@ namespace IoTControlTower.Application.Service
         {
             try
             {
-                // Verificar se o usuário já existe
                 var hasUser = await GetUserName(userRegisterDTO.UserName);
                 if (hasUser)
                     throw new Exception("User already exists.");
 
-                // Mapear DTO para entidade de usuário
                 var user = _mapper.Map<User>(userRegisterDTO);
                 if (user is not null)
                 {
-                    // Verificar se o e-mail já existe
                     var userExist = await _userManager.FindByEmailAsync(user.Email);
                     if (userExist != null)
                         throw new Exception("Email already exists.");
 
-                    // Verificar se a função (role) existe
                     if (await _roleManager.RoleExistsAsync(role))
                     {
-                        // Criar o usuário e atribuir a função
                         var result = await _userManager.CreateAsync(user, userRegisterDTO.Password);
                         if (!result.Succeeded)
                             throw new Exception("Failed to create user.");
@@ -78,11 +71,11 @@ namespace IoTControlTower.Application.Service
             }
         }
 
-        public string? GetUserId()
+        public async Task<string> GetUserId()
         {
             try
             {
-                return _userRepository.GetUserId();
+                return await _userRepository.GetUserId();
             }
             catch (Exception)
             {

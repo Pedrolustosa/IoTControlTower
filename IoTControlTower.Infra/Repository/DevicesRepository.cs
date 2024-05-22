@@ -15,7 +15,7 @@ namespace IoTControlTower.Infra.Repository
             {
                 return await _context.Devices.Include(d => d.CommandDescriptions)
                                          .ThenInclude(cd => cd.Command)
-                                         .FirstOrDefaultAsync(d => d.Id == id) ?? new();
+                                         .FirstOrDefaultAsync(d => d.Id == id);
             }
             catch (Exception)
             {

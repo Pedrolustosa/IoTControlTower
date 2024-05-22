@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using IoTControlTower.Application.DTO;
+using IoTControlTower.Application.DTO.Device;
 using IoTControlTower.Domain.Entities;
 
 namespace IoTControlTower.Application.Mapping

@@ -7,9 +7,9 @@ namespace IoTControlTower.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class AuthenticatesController(IAuthenticateService authentication, ILogger logger) : ControllerBase
+    public class AuthenticatesController(IAuthenticateService authentication, ILogger<AuthenticatesController> logger) : ControllerBase
     {
-        private readonly ILogger _logger = logger;
+        private readonly ILogger<AuthenticatesController> _logger = logger;
         private readonly IAuthenticateService _authentication = authentication;
 
         [HttpPost("Authenticate")]
