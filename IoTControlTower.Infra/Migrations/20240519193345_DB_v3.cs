@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace IoTControlTower.Infra.Migrations
 {
     /// <inheritdoc />
-    public partial class DB_v2 : Migration
+    public partial class DB_v3 : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -181,6 +181,7 @@ namespace IoTControlTower.Infra.Migrations
                     Description = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: false),
                     Manufacturer = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
                     Url = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    IsActive = table.Column<bool>(type: "bit", nullable: false),
                     UserId = table.Column<string>(type: "nvarchar(450)", nullable: false)
                 },
                 constraints: table =>
@@ -251,8 +252,8 @@ namespace IoTControlTower.Infra.Migrations
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
                 values: new object[,]
                 {
-                    { "29505e5e-619e-4b5e-94b7-fd5aecc650fa", "2", "User", "User" },
-                    { "35163c06-9050-4077-b8c7-1e56b7f980d6", "1", "Admin", "Admin" }
+                    { "d401fb67-8090-48a6-a197-a2f04564e5d8", "1", "Admin", "Admin" },
+                    { "f0ae37a8-c487-475e-b22f-e4bf5913e2ac", "2", "User", "User" }
                 });
 
             migrationBuilder.CreateIndex(

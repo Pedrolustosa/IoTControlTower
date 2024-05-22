@@ -45,7 +45,7 @@ namespace IoTControlTower.API.Controllers
             }
         }
 
-        [HttpGet("GetDeviceById")]
+        [HttpGet("GetDashboardSummary")]
         [Authorize(Roles = "Admin,User")]
         public async Task<ActionResult<DashboardSummary>> GetDashboardSummary()
         {

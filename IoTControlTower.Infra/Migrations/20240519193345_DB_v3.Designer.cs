@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace IoTControlTower.Infra.Migrations
 {
     [DbContext(typeof(IoTControlTowerContext))]
-    [Migration("20240519032143_DB_v2")]
-    partial class DB_v2
+    [Migration("20240519193345_DB_v3")]
+    partial class DB_v3
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -102,6 +102,9 @@ namespace IoTControlTower.Infra.Migrations
                         .IsRequired()
                         .HasMaxLength(500)
                         .HasColumnType("nvarchar(500)");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
 
                     b.Property<string>("Manufacturer")
                         .IsRequired()
@@ -249,14 +252,14 @@ namespace IoTControlTower.Infra.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "35163c06-9050-4077-b8c7-1e56b7f980d6",
+                            Id = "d401fb67-8090-48a6-a197-a2f04564e5d8",
                             ConcurrencyStamp = "1",
                             Name = "Admin",
                             NormalizedName = "Admin"
                         },
                         new
                         {
-                            Id = "29505e5e-619e-4b5e-94b7-fd5aecc650fa",
+                            Id = "f0ae37a8-c487-475e-b22f-e4bf5913e2ac",
                             ConcurrencyStamp = "2",
                             Name = "User",
                             NormalizedName = "User"
