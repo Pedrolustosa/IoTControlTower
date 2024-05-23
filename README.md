@@ -7,7 +7,7 @@
 [![License](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 ![Project Views](https://komarev.com/ghpvc/?username=SeuUsuario&label=Project%20Views&color=brightgreen)
 
-Este projeto é uma aplicação de auxílio à tomada de decisão para uma indústria agrária, utilizando uma torre de controle para visualizar dados de dispositivos IoT em tempo real. A aplicação permite o cadastramento e gerenciamento de dispositivos IoT através de uma plataforma colaborativa.
+Este projeto é uma aplicação de auxílio à tomada de decisão, utilizando uma torre de controle para visualizar dados de dispositivos IoT em tempo real. A aplicação permite o cadastramento e gerenciamento de dispositivos IoT através de uma plataforma colaborativa.
 
 ## Arquitetura
 
@@ -17,7 +17,7 @@ O projeto segue uma arquitetura baseada na Clean Architecture e DDD (Domain-Driv
 
 2. **Application Layer**: Camada que contém a lógica de negócios da aplicação. Aqui são implementados os casos de uso da aplicação, que orquestram as operações entre as entidades e os serviços.
 
-3. **Domain Layer**: Camada que representa o núcleo da aplicação, contendo as entidades de domínio, interfaces de repositório e definições de contratos de serviços. Aqui são estabelecidas as regras de negócio da aplicação. Atualmente, estamos utilizando o DDD especificamente na entidade `Device`.
+3. **Domain Layer**: Camada que representa o núcleo da aplicação, contendo as entidades de domínio, interfaces de repositório e definições de contratos de serviços. Aqui são estabelecidas as regras de negócio da aplicação. Atualmente, estamos utilizando o DDD especificamente nas entidades `Device` e `User`.
 
 4. **Infrastructure Layer**: Camada responsável pela implementação concreta das interfaces definidas no domínio. Aqui são implementados os repositórios de dados, serviços externos e qualquer infraestrutura necessária para a aplicação funcionar.
 
@@ -33,6 +33,15 @@ O projeto segue uma arquitetura baseada na Clean Architecture e DDD (Domain-Driv
 - **AutoMapper**: Biblioteca utilizada para mapear objetos entre diferentes camadas da aplicação de forma automatizada.
 - **Serilog**: Biblioteca utilizada para logging e auditoria de eventos na aplicação.
 - **SQL Server**: Banco de dados relacional utilizado para armazenar os dados da aplicação.
+- **FluentValidation**: Biblioteca utilizada para validar objetos complexos, assegurando que os dados estejam consistentes antes de serem processados.
+
+## Funcionalidades
+
+- **Cadastro e gerenciamento de dispositivos IoT**: Permite o registro e controle de dispositivos conectados à plataforma.
+- **Visualização de dados em tempo real**: Oferece uma interface para monitorar dados coletados pelos dispositivos.
+- **Autenticação e autorização**: Utiliza JWT e Identity para gerenciar o acesso seguro aos recursos da aplicação.
+- **Logging e auditoria**: Implementado com Serilog para monitoramento eficiente das operações do sistema.
+- **Validação de dados**: Usando FluentValidation para garantir a integridade e validade dos dados de entrada.
 
 ## Executando o Projeto
 
@@ -59,7 +68,6 @@ A estrutura de pastas do projeto é organizada da seguinte forma:
 Para popular o banco de dados com dados de exemplo, execute os seguintes comandos SQL:
 
 ```sql
-
 -- Inserindo dispositivos
 INSERT INTO Devices (Description, Manufacturer, Url, IsActive, UserId) VALUES
 ('Device 1', 'Manufacturer A', 'http://device1.com', 1, 'user1-id'),
