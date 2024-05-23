@@ -4,7 +4,7 @@ namespace IoTControlTower.Application.Interface
 {
     public interface IAuthenticateService
     {
-        Task<bool> Authenticate(string email, string password);
+        Task<bool> Authenticate(LoginDTO loginDTO);
 
         Task<string> GenerateToken(LoginDTO loginDTO);
     }

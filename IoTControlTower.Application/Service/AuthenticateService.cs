@@ -1,47 +1,79 @@
 ﻿using AutoMapper;
-using IoTControlTower.Application.DTO;
-using IoTControlTower.Application.Interface;
-using IoTControlTower.Domain.Entities;
-using IoTControlTower.Domain.Interface;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.Extensions.Configuration;
-using Microsoft.IdentityModel.Tokens;
-using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
 using System.Text;
+using System.Security.Claims;
+using Microsoft.Extensions.Logging;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.IdentityModel.Tokens;
+using IoTControlTower.Application.DTO;
+using System.IdentityModel.Tokens.Jwt;
+using IoTControlTower.Domain.Entities;
+using Microsoft.Extensions.Configuration;
+using IoTControlTower.Application.Interface;
 
 namespace IoTControlTower.Application.Service
 {
-    public class AuthenticateService(SignInManager<User> signInManager, UserManager<User> userManager, IUserRepository userRepository, IConfiguration configuration) : IAuthenticateService
+    public class AuthenticateService(SignInManager<User> signInManager, 
+                                     UserManager<User> userManager, 
+                                     IUserService userService, 
+                                     IMapper mapper, 
+                                     IConfiguration configuration,
+                                     ILogger<AuthenticateService>  logger) : IAuthenticateService
     {
         private readonly SignInManager<User> _signInManager = signInManager;
-        private readonly UserManager<User> _userManager = userManager;
+        private readonly ILogger<AuthenticateService> _logger = logger;
         private readonly IConfiguration _configuration = configuration;
-        private readonly IUserRepository _userRepository = userRepository;
+        private readonly UserManager<User> _userManager = userManager;
+        private readonly IUserService _userService = userService;
+        private readonly IMapper _mapper = mapper;
 
-        public async Task<bool> Authenticate(string userName, string password)
+        public async Task<bool> Authenticate(LoginDTO loginDTO)
         {
+            _logger.LogInformation("Authenticate() - Attempting to authenticate user: {UserName}", loginDTO.UserName);
+
             try
             {
-                var statusUser = await _userRepository.GetUserName(userName);
-                if (statusUser)
+                var existUser = await _userService.GetUserName(loginDTO.UserName);
+
+                if (!existUser)
                 {
-                    var result = await _signInManager.PasswordSignInAsync(userName, password, false, lockoutOnFailure: false);
-                    return result.Succeeded;
+                    _logger.LogWarning("Authenticate() - User is not exist: {UserName}", loginDTO.UserName);
+                    throw new Exception("User is not exist!");
                 }
-                throw new Exception("User Inactive!");
+
+                var result = await _signInManager.PasswordSignInAsync(loginDTO.UserName, loginDTO.Password, false, lockoutOnFailure: false);
+
+                if (result.Succeeded)
+                {
+                    _logger.LogInformation("Authenticate() - User authenticated successfully: {UserName}", loginDTO.UserName);
+                    return true;
+                }
+                else
+                {
+                    _logger.LogWarning("Authenticate() - Invalid login attempt for user: {UserName}", loginDTO.UserName);
+                    return false;
+                }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                _logger.LogError(ex, "Authenticate() - Error occurred while authenticating user: {UserName}", loginDTO.UserName);
                 throw;
             }
         }
 
         public async Task<string> GenerateToken(LoginDTO loginDTO)
         {
+            _logger.LogInformation("GenerateToken() - Generating token for user: {UserName}", loginDTO.UserName);
+
             try
             {
                 var user = await _userManager.FindByNameAsync(loginDTO.UserName);
+
+                if (user is null)
+                {
+                    _logger.LogWarning("GenerateToken() - User not found: {UserName}", loginDTO.UserName);
+                    throw new Exception($"User not found: {loginDTO.UserName}");
+                }
+
                 var claims = new List<Claim>
                 {
                     new(ClaimTypes.Name, loginDTO.UserName),
@@ -56,20 +88,23 @@ namespace IoTControlTower.Application.Service
 
                 var privateKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:SecretKey"]));
                 var credentials = new SigningCredentials(privateKey, SecurityAlgorithms.HmacSha256);
-                var expirations = DateTime.Now.AddMinutes(10);
+                var expirationTime = DateTime.UtcNow.AddMinutes(10);
 
-                JwtSecurityToken token = new
-                (
+                JwtSecurityToken token = new JwtSecurityToken(
                     issuer: _configuration["Jwt:Issuer"],
                     audience: _configuration["Jwt:Audience"],
                     claims: claims,
-                    expires: expirations,
+                    expires: expirationTime,
                     signingCredentials: credentials
                 );
-                return new JwtSecurityTokenHandler().WriteToken(token);
+
+                var tokenString = new JwtSecurityTokenHandler().WriteToken(token);
+                _logger.LogInformation("GenerateToken() - Token generated successfully for user: {UserName}", loginDTO.UserName);
+                return tokenString;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                _logger.LogError(ex, "GenerateToken() - Error occurred while generating token for user: {UserName}", loginDTO.UserName);
                 throw;
             }
         }

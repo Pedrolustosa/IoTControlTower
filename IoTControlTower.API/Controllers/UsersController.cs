@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using IoTControlTower.API.Models;
-using IoTControlTower.Application.DTO;
 using Microsoft.AspNetCore.Authorization;
+using IoTControlTower.Application.DTO.User;
 using IoTControlTower.Application.Interface;
 
 namespace IoTControlTower.API.Controllers
@@ -42,9 +42,44 @@ namespace IoTControlTower.API.Controllers
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Post() - Error occurred while creating user {Email}.", userRegisterDTO.Email);
+                _logger.LogError(ex, "CreateUser() - Error occurred while creating user {Email}.", userRegisterDTO.Email);
                 return this.StatusCode(StatusCodes.Status500InternalServerError, $"Erro: {ex.Message}");
             }
         }
+
+        [HttpPut("UpdateUser")]
+        [AllowAnonymous]
+        public async Task<IActionResult> UpdateUser(UserUpdateDTO userUpdateDTO)
+        {
+            _logger.LogInformation("UpdateUser() - Attempting to update user: {UserName}", userUpdateDTO.UserName);
+
+            try
+            {
+                var hasUser = await _userService.GetUserName(userUpdateDTO.UserName);
+
+                if (!hasUser)
+                {
+                    _logger.LogWarning("UpdateUser() - User does not exist: {UserName}", userUpdateDTO.UserName);
+                    return NotFound(new { message = "User does not exist." });
+                }
+
+                var applicationUserUpdate = await _userService.UpdateUser(userUpdateDTO);
+
+                if (applicationUserUpdate == null)
+                {
+                    _logger.LogWarning("UpdateUser() - No content returned for user: {UserName}", userUpdateDTO.UserName);
+                    return NoContent();
+                }
+
+                _logger.LogInformation("UpdateUser() - Successfully updated user: {UserName}", userUpdateDTO.UserName);
+                return Ok(new { email = applicationUserUpdate.Email });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "UpdateUser() - Error occurred while updating user {UserName}.", userUpdateDTO.UserName);
+                return StatusCode(StatusCodes.Status500InternalServerError, $"Error: {ex.Message}");
+            }
+        }
+
     }
 }

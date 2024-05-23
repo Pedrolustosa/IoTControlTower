@@ -1,4 +1,4 @@
-﻿using IoTControlTower.Application.DTO;
+﻿using IoTControlTower.Application.DTO.User;
 
 namespace IoTControlTower.Application.Interface
 {
@@ -6,6 +6,9 @@ namespace IoTControlTower.Application.Interface
     {
         Task<string> GetUserId();
         Task<bool> GetUserName(string userName);
-        Task<bool> CreateUser(UserRegisterDTO applicationUserRegisterDTO, string role);
+        Task<UserDTO> GetUserData(UserDTO userDTO);
+        
+        Task<bool> CreateUser(UserRegisterDTO userRegisterDTO, string role);
+        Task<UserUpdateDTO> UpdateUser(UserUpdateDTO userRegisterDTO);
     }
 }

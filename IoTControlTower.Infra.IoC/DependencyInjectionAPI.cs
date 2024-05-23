@@ -36,8 +36,8 @@ namespace IoTControlTower.Infra.IoC
             services.AddScoped<IDevicesRepository, DevicesRepository>();
 
             //Serices
-            services.AddScoped<IDeviceService, DeviceService>();
             services.AddScoped<IUserService, UserService>();
+            services.AddScoped<IDeviceService, DeviceService>();
             services.AddScoped<IAuthenticateService, AuthenticateService>();
             return services;
         }

@@ -7,10 +7,10 @@ namespace IoTControlTower.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class AuthenticatesController(IAuthenticateService authentication, ILogger<AuthenticatesController> logger) : ControllerBase
+    public class AuthenticatesController(IAuthenticateService authenticationService, ILogger<AuthenticatesController> logger) : ControllerBase
     {
         private readonly ILogger<AuthenticatesController> _logger = logger;
-        private readonly IAuthenticateService _authentication = authentication;
+        private readonly IAuthenticateService _authenticationService = authenticationService;
 
         [HttpPost("Authenticate")]
         public async Task<ActionResult<UserToken>> Authenticate([FromBody] LoginDTO loginDTO)
@@ -18,11 +18,11 @@ namespace IoTControlTower.API.Controllers
             _logger.LogInformation("Authenticate() - Attempting to authenticate user: {UserName}", loginDTO.UserName);
             try
             {
-                var result = await _authentication.Authenticate(loginDTO.UserName, loginDTO.Password);
+                var result = await _authenticationService.Authenticate(loginDTO);
                 if (result)
                 {
                     _logger.LogInformation("GenerateToken() - Generating token for user: {UserName}", loginDTO.UserName);
-                    var token = await _authentication.GenerateToken(loginDTO);
+                    var token = await _authenticationService.GenerateToken(loginDTO);
                     return Ok(new UserToken { Token = token });
                 }
                 else

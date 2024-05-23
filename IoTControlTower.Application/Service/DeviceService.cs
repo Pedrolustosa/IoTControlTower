@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using FluentValidation;
-using IoTControlTower.Application.DTO;
 using IoTControlTower.Domain.Entities;
+using IoTControlTower.Application.DTO;
 using IoTControlTower.Domain.Interface;
 using IoTControlTower.Application.Interface;
 using IoTControlTower.Application.DTO.Device;
@@ -102,8 +102,7 @@ namespace IoTControlTower.Application.Service
         {
             try
             {
-                var dashboard = await _deviceRepository.GetDashboardSummary();
-                return _mapper.Map<DashboardSummaryDTO>(dashboard);
+                return new DashboardSummaryDTO();
             }
             catch (Exception)
             {

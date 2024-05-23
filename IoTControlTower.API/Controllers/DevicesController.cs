@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using IoTControlTower.Domain.Entities;
+using IoTControlTower.Application.DTO;
 using Microsoft.AspNetCore.Authorization;
 using IoTControlTower.Application.Interface;
 using IoTControlTower.Application.DTO.Device;
@@ -60,14 +61,14 @@ namespace IoTControlTower.API.Controllers
 
         [HttpGet("GetDashboardSummary")]
         [Authorize(Roles = "Admin,User")]
-        public async Task<ActionResult<DashboardSummary>> GetDashboardSummary()
+        public async Task<ActionResult<DashboardSummaryDTO>> GetDashboardSummary()
         {
             _logger.LogInformation("Executing GetDashboardSummary()");
 
             try
             {
                 var dashboardSummary = await _deviceService.GetDashboardSummary();
-                if (dashboardSummary == null)
+                if (dashboardSummary is null)
                 {
                     _logger.LogWarning("Dashboard summary not found.");
                     return NotFound();

@@ -75,29 +75,5 @@ namespace IoTControlTower.Infra.Repository
                 throw;
             }
         }
-
-        public async Task<DashboardSummary> GetDashboardSummary()
-        {
-            try
-            {
-                var totalDevices = await _context.Devices.CountAsync();
-                var activeDevices = await _context.Devices.CountAsync(d => d.IsActive);
-                var inactiveDevices = totalDevices - activeDevices;
-                var totalUsers = await _context.Users.CountAsync();
-                var monitoringDevices = await _context.Devices.CountAsync(d => d.UserId != null);
-                return new DashboardSummary
-                {
-                    TotalDevices = totalDevices,
-                    ActiveDevices = activeDevices,
-                    InactiveDevices = inactiveDevices,
-                    TotalUsers = totalUsers,
-                    MonitoringDevices = monitoringDevices
-                };
-            }
-            catch (Exception)
-            {
-                throw;
-            }
-        }
     }
 }
