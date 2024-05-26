@@ -23,6 +23,7 @@ namespace IoTControlTower.API.Controllers
                 {
                     _logger.LogInformation("GenerateToken() - Generating token for user: {UserName}", loginDTO.UserName);
                     var token = await _authenticationService.GenerateToken(loginDTO);
+                    _logger.LogInformation("Authenticate() - Token generated successfully for user: {UserName}", loginDTO.UserName);
                     return Ok(new UserToken { Token = token });
                 }
                 else

@@ -1,6 +1,4 @@
-﻿using System.Text.Json.Serialization;
-
-namespace IoTControlTower.Application.DTO.User
+﻿namespace IoTControlTower.Application.DTO.User
 {
     public class UserRegisterDTO
     {

@@ -1,6 +1,4 @@
-﻿using System.Text.Json.Serialization;
-
-namespace IoTControlTower.Application.DTO
+﻿namespace IoTControlTower.Application.DTO
 {
     public class LoginDTO
     {

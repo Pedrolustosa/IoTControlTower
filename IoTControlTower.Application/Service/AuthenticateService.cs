@@ -8,6 +8,7 @@ using IoTControlTower.Application.DTO;
 using System.IdentityModel.Tokens.Jwt;
 using IoTControlTower.Domain.Entities;
 using Microsoft.Extensions.Configuration;
+using IoTControlTower.Application.DTO.User;
 using IoTControlTower.Application.Interface;
 
 namespace IoTControlTower.Application.Service
@@ -36,8 +37,8 @@ namespace IoTControlTower.Application.Service
 
                 if (!existUser)
                 {
-                    _logger.LogWarning("Authenticate() - User is not exist: {UserName}", loginDTO.UserName);
-                    throw new Exception("User is not exist!");
+                    _logger.LogWarning("Authenticate() - User does not exist: {UserName}", loginDTO.UserName);
+                    throw new Exception("User does not exist!");
                 }
 
                 var result = await _signInManager.PasswordSignInAsync(loginDTO.UserName, loginDTO.Password, false, lockoutOnFailure: false);
@@ -45,6 +46,14 @@ namespace IoTControlTower.Application.Service
                 if (result.Succeeded)
                 {
                     _logger.LogInformation("Authenticate() - User authenticated successfully: {UserName}", loginDTO.UserName);
+                    var user = await _userService.GetUserData(new UserDTO { UserName = loginDTO.UserName });
+                    if (user != null)
+                    {
+                        user.LastLogin = DateTime.Now;
+                        var userUpdateDTO = _mapper.Map<UserUpdateDTO>(user);
+                        userUpdateDTO.UpdateDate = null;
+                        await _userService.UpdateUser(userUpdateDTO);
+                    }
                     return true;
                 }
                 else

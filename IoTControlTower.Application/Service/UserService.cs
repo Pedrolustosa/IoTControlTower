@@ -118,8 +118,15 @@ namespace IoTControlTower.Application.Service
                 var user = _mapper.Map<User>(userUpdateDTO);
                 var actualUser = await _userRepository.GetUserData(user) ?? throw new Exception("This user does not exist!");
 
+                var originalUpdateDate = actualUser.UpdateDate;
+                var originalLastLogin = actualUser.LastLogin;
                 _mapper.Map(userUpdateDTO, actualUser);
-                if (userUpdateDTO.Password != null)
+                if (userUpdateDTO.UpdateDate is null)
+                    actualUser.UpdateDate = originalUpdateDate;
+                if (userUpdateDTO.LastLogin is null)
+                    actualUser.LastLogin = originalLastLogin;
+
+                if (userUpdateDTO.Password is not null)
                 {
                     var token = await _userManager.GeneratePasswordResetTokenAsync(actualUser);
                     var resetResult = await _userManager.ResetPasswordAsync(actualUser, token, userUpdateDTO.Password);
@@ -147,5 +154,6 @@ namespace IoTControlTower.Application.Service
                 throw;
             }
         }
+
     }
 }

@@ -1,8 +1,8 @@
 ﻿using AutoMapper;
 using IoTControlTower.Domain.Entities;
 using IoTControlTower.Application.DTO;
-using IoTControlTower.Application.DTO.Device;
 using IoTControlTower.Application.DTO.User;
+using IoTControlTower.Application.DTO.Device;
 
 namespace IoTControlTower.Application.Mapping
 {
@@ -17,6 +17,7 @@ namespace IoTControlTower.Application.Mapping
             CreateMap<User, UserDTO>().ReverseMap();
             CreateMap<User, UserRegisterDTO>().ReverseMap();
             CreateMap<User, UserUpdateDTO>().ReverseMap();
+            CreateMap<UserDTO, UserUpdateDTO>().ReverseMap();
         }
     }
 }
