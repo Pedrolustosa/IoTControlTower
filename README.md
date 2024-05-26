@@ -1,4 +1,4 @@
-# Projeto IoT Control Tower
+# IoT Control Tower Project
 
 ![GitHub repo size](https://img.shields.io/github/repo-size/Pedrolustosa/IoTControlTower)
 ![GitHub contributors](https://img.shields.io/github/contributors/Pedrolustosa/IoTControlTower)
@@ -7,68 +7,68 @@
 [![License](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 ![Project Views](https://komarev.com/ghpvc/?username=SeuUsuario&label=Project%20Views&color=brightgreen)
 
-Este projeto é uma aplicação de auxílio à tomada de decisão, utilizando uma torre de controle para visualizar dados de dispositivos IoT em tempo real. A aplicação permite o cadastramento e gerenciamento de dispositivos IoT através de uma plataforma colaborativa.
+This project is a decision-making aid application, using a control tower to visualize data from IoT devices in real-time. The application allows the registration and management of IoT devices through a collaborative platform.
 
-## Arquitetura
+## Architecture
 
-O projeto segue uma arquitetura baseada na Clean Architecture e DDD (Domain-Driven Design), que promove a separação clara de responsabilidades entre as diferentes camadas da aplicação. A estrutura do projeto é dividida em cinco camadas principais:
+The project follows an architecture based on Clean Architecture and DDD (Domain-Driven Design), promoting clear separation of responsibilities between different layers of the application. The project structure is divided into five main layers:
 
-1. **API (Presentation Layer)**: Camada responsável por lidar com as requisições HTTP, receber e enviar dados para o cliente. Aqui são definidos os controladores, modelos de dados DTO (Data Transfer Objects) e mapeamentos entre entidades e DTOs.
+1. **API (Presentation Layer)**: This layer is responsible for handling HTTP requests, receiving and sending data to the client. Controllers, DTO (Data Transfer Objects) models, and mappings between entities and DTOs are defined here.
 
-2. **Application Layer**: Camada que contém a lógica de negócios da aplicação. Aqui são implementados os casos de uso da aplicação, que orquestram as operações entre as entidades e os serviços.
+2. **Application Layer**: This layer contains the business logic of the application. It implements the use cases of the application, orchestrating operations between entities and services.
 
-3. **Domain Layer**: Camada que representa o núcleo da aplicação, contendo as entidades de domínio, interfaces de repositório e definições de contratos de serviços. Aqui são estabelecidas as regras de negócio da aplicação. Atualmente, estamos utilizando o DDD especificamente nas entidades `Device` e `User`.
+3. **Domain Layer**: This layer represents the core of the application, containing domain entities, repository interfaces, and service contract definitions. The business rules of the application are established here. Currently, we are using DDD specifically in the `Device` and `User` entities.
 
-4. **Infrastructure Layer**: Camada responsável pela implementação concreta das interfaces definidas no domínio. Aqui são implementados os repositórios de dados, serviços externos e qualquer infraestrutura necessária para a aplicação funcionar.
+4. **Infrastructure Layer**: This layer is responsible for the concrete implementation of the interfaces defined in the domain. Data repositories, external services, and any infrastructure necessary for the application to function are implemented here.
 
-5. **Infrastructure IoC (Inversion of Control)**: Camada responsável pela configuração e injeção de dependências da aplicação. Aqui são registradas as dependências da aplicação e configurados os serviços que serão utilizados.
+5. **Infrastructure IoC (Inversion of Control)**: This layer is responsible for the configuration and dependency injection of the application. Dependencies are registered and the services to be used are configured here.
 
-## Tecnologias Utilizadas
+## Technologies Used
 
-- **ASP.NET Core 8**: Framework web utilizado para construir a API da aplicação.
-- **Entity Framework Core**: ORM (Object-Relational Mapper) utilizado para mapear objetos do domínio para o banco de dados relacional.
-- **Swagger**: Ferramenta utilizada para documentar e testar a API da aplicação.
-- **JWT (JSON Web Tokens)**: Sistema de autenticação utilizado para proteger os endpoints da API.
-- **Identity**: Framework utilizado para gerenciamento de identidade e autenticação de usuários.
-- **AutoMapper**: Biblioteca utilizada para mapear objetos entre diferentes camadas da aplicação de forma automatizada.
-- **Serilog**: Biblioteca utilizada para logging e auditoria de eventos na aplicação.
-- **SQL Server**: Banco de dados relacional utilizado para armazenar os dados da aplicação.
-- **FluentValidation**: Biblioteca utilizada para validar objetos complexos, assegurando que os dados estejam consistentes antes de serem processados.
+- **ASP.NET Core 8**: Web framework used to build the application's API.
+- **Entity Framework Core**: ORM (Object-Relational Mapper) used to map domain objects to the relational database.
+- **Swagger**: Tool used to document and test the application's API.
+- **JWT (JSON Web Tokens)**: Authentication system used to secure the API endpoints.
+- **Identity**: Framework used for identity management and user authentication.
+- **AutoMapper**: Library used to map objects between different layers of the application automatically.
+- **Serilog**: Library used for logging and event auditing in the application.
+- **SQL Server**: Relational database used to store application data.
+- **FluentValidation**: Library used to validate complex objects, ensuring data consistency before processing.
 
-## Funcionalidades
+## Features
 
-- **Cadastro e gerenciamento de dispositivos IoT**: Permite o registro e controle de dispositivos conectados à plataforma.
-- **Visualização de dados em tempo real**: Oferece uma interface para monitorar dados coletados pelos dispositivos.
-- **Autenticação e autorização**: Utiliza JWT e Identity para gerenciar o acesso seguro aos recursos da aplicação.
-- **Logging e auditoria**: Implementado com Serilog para monitoramento eficiente das operações do sistema.
-- **Validação de dados**: Usando FluentValidation para garantir a integridade e validade dos dados de entrada.
+- **IoT Device Registration and Management**: Allows the registration and control of devices connected to the platform.
+- **Real-Time Data Visualization**: Provides an interface to monitor data collected by devices.
+- **Authentication and Authorization**: Uses JWT and Identity to manage secure access to application resources.
+- **Logging and Auditing**: Implemented with Serilog for efficient system operation monitoring.
+- **Data Validation**: Using FluentValidation to ensure the integrity and validity of input data.
 
-## Executando o Projeto
+## Running the Project
 
-Para executar o projeto localmente, siga as instruções abaixo:
+To run the project locally, follow the instructions below:
 
-1. Certifique-se de ter o SDK do .NET 8 instalado em sua máquina.
-2. Clone este repositório em sua máquina local.
-3. Navegue até o diretório raiz do projeto.
-4. Abra um terminal e execute o comando `dotnet run` para iniciar a aplicação.
-5. Acesse a documentação da API em `http://localhost:5000/swagger` no seu navegador para visualizar e testar os endpoints.
+1. Ensure you have the .NET 8 SDK installed on your machine.
+2. Clone this repository to your local machine.
+3. Navigate to the root directory of the project.
+4. Open a terminal and run the command `dotnet run` to start the application.
+5. Access the API documentation at `http://localhost:5000/swagger` in your browser to view and test the endpoints.
 
-## Estrutura de Pastas
+## Folder Structure
 
-A estrutura de pastas do projeto é organizada da seguinte forma:
+The project folder structure is organized as follows:
 
-- **IoTControlTower.API**: Contém a camada de apresentação com os controladores, modelos de dados DTO e configuração do Swagger.
-- **IoTControlTower.Application**: Contém a camada de aplicação com os serviços, mapeamentos e casos de uso.
-- **IoTControlTower.Domain**: Contém a camada de domínio com as entidades, interfaces de repositório e definições de contratos de serviços.
-- **IoTControlTower.Infrastructure**: Contém a camada de infraestrutura com a implementação concreta das interfaces de repositório e serviços externos.
-- **IoTControlTower.Infrastructure.IoC**: Contém a configuração e injeção de dependências da aplicação.
+- **IoTControlTower.API**: Contains the presentation layer with controllers, DTO models, and Swagger configuration.
+- **IoTControlTower.Application**: Contains the application layer with services, mappings, and use cases.
+- **IoTControlTower.Domain**: Contains the domain layer with entities, repository interfaces, and service contract definitions.
+- **IoTControlTower.Infrastructure**: Contains the infrastructure layer with concrete implementations of repository interfaces and external services.
+- **IoTControlTower.Infrastructure.IoC**: Contains the configuration and dependency injection of the application.
 
-## Inserindo Dados no Banco de Dados
+## Inserting Data into the Database
 
-Para popular o banco de dados com dados de exemplo, execute os seguintes comandos SQL:
+To populate the database with sample data, execute the following SQL commands:
 
 ```sql
--- Inserindo dispositivos
+-- Inserting devices
 INSERT INTO Devices (Description, Manufacturer, Url, IsActive, UserId) VALUES
 ('Device 1', 'Manufacturer A', 'http://device1.com', 1, 'user1-id'),
 ('Device 2', 'Manufacturer B', 'http://device2.com', 1, 'user2-id'),
@@ -76,7 +76,7 @@ INSERT INTO Devices (Description, Manufacturer, Url, IsActive, UserId) VALUES
 ('Device 4', 'Manufacturer D', 'http://device4.com', 1, 'user4-id'),
 ('Device 5', 'Manufacturer E', 'http://device5.com', 1, 'user5-id');
 
--- Inserindo comandos
+-- Inserting commands
 INSERT INTO Commands (CommandText) VALUES
 ('Command 1'),
 ('Command 2'),
@@ -84,7 +84,7 @@ INSERT INTO Commands (CommandText) VALUES
 ('Command 4'),
 ('Command 5');
 
--- Inserindo parâmetros
+-- Inserting parameters
 INSERT INTO Parameters (Name, Description, CommandId) VALUES
 ('Parameter 1', 'Description 1', 1),
 ('Parameter 2', 'Description 2', 2),
@@ -92,7 +92,7 @@ INSERT INTO Parameters (Name, Description, CommandId) VALUES
 ('Parameter 4', 'Description 4', 4),
 ('Parameter 5', 'Description 5', 5);
 
--- Inserindo descrições de comandos
+-- Inserting command descriptions
 INSERT INTO CommandDescriptions (Operation, Description, Result, Format, DeviceIdentifier, DeviceId, CommandId) VALUES
 ('Operation 1', 'Description 1', 'Result 1', 'Format 1', 'DeviceIdentifier 1', 1, 1),
 ('Operation 2', 'Description 2', 'Result 2', 'Format 2', 'DeviceIdentifier 2', 2, 2),
