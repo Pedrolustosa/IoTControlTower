@@ -1,4 +1,5 @@
-﻿using IoTControlTower.Application.DTO.User;
+﻿using Microsoft.AspNetCore.Mvc;
+using IoTControlTower.Application.DTO.User;
 
 namespace IoTControlTower.Application.Interface
 {
@@ -7,8 +8,8 @@ namespace IoTControlTower.Application.Interface
         Task<string> GetUserId();
         Task<bool> GetUserName(string userName);
         Task<UserDTO> GetUserData(UserDTO userDTO);
-        
-        Task<bool> CreateUser(UserRegisterDTO userRegisterDTO, string role);
+        Task<string> ConfirmEmail(string token, string email);
+        Task<bool> CreateUser(UserRegisterDTO userRegisterDTO, string role, IUrlHelper urlHelper, string scheme);
         Task<UserUpdateDTO> UpdateUser(UserUpdateDTO userRegisterDTO);
     }
 }

@@ -30,6 +30,7 @@ namespace IoTControlTower.Infra.IoC
             var emailConfig = configuration.GetSection("EmailConfiguration")
                 .Get<EmailDTO>();
             services.AddSingleton(emailConfig);
+            services.Configure<IdentityOptions>(opts => opts.SignIn.RequireConfirmedEmail = true);
 
             //FluentValidator
             services.AddTransient<IValidator<DeviceDTO>, DeviceValidator>();

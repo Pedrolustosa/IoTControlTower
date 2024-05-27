@@ -1,17 +1,15 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using IoTControlTower.API.Models;
 using IoTControlTower.Application.DTO;
-using Microsoft.AspNetCore.Authorization;
 using IoTControlTower.Application.Interface;
-using IoTControlTower.Application.DTO.Email;
 
 namespace IoTControlTower.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class AuthenticatesController(IAuthenticateService authenticationService, ILogger<AuthenticatesController> logger, IEmailService emailService) : ControllerBase
+    public class AuthenticatesController(IAuthenticateService authenticationService, ILogger<AuthenticatesController> logger) : ControllerBase
     {
-        private readonly IEmailService _emailService = emailService;
+        
         private readonly ILogger<AuthenticatesController> _logger = logger;
         private readonly IAuthenticateService _authenticationService = authenticationService;
 
@@ -41,16 +39,6 @@ namespace IoTControlTower.API.Controllers
                 _logger.LogError(ex, "Authenticate() - Error occurred while authenticating user: {UserName}", loginDTO.UserName);
                 return this.StatusCode(StatusCodes.Status500InternalServerError, $"Error: {ex.Message}");
             }
-        }
-
-        [HttpGet("Email")]
-        [AllowAnonymous]
-        public IActionResult EmailTest()
-        {
-            var message = new MessageDTO(new string[] { "pedroeternalss@gmail.com" }, "Test", "<h1>Test E-mail</h1>");
-
-            _emailService.SendEmail(message);
-            return StatusCode(StatusCodes.Status204NoContent, new { Status = "Success", Message = "Email sent successfully" });
         }
     }
 }

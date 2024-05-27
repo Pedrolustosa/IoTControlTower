@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using IoTControlTower.API.Models;
+using Microsoft.AspNetCore.Identity;
+using IoTControlTower.Domain.Entities;
 using Microsoft.AspNetCore.Authorization;
 using IoTControlTower.Application.DTO.User;
 using IoTControlTower.Application.Interface;
@@ -8,10 +10,13 @@ namespace IoTControlTower.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class UsersController(IUserService userService, ILogger<UsersController> logger) : ControllerBase
+    public class UsersController(IUserService userService, 
+                                 ILogger<UsersController> logger, 
+                                 UserManager<User> userManager) : ControllerBase
     {
-        private readonly ILogger<UsersController> _logger = logger;
         private readonly IUserService _userService = userService;
+        private readonly ILogger<UsersController> _logger = logger;
+        private readonly UserManager<User> _userManager = userManager;
 
         [HttpPost("RegisterUser")]
         [AllowAnonymous]
@@ -27,7 +32,9 @@ namespace IoTControlTower.API.Controllers
                     return BadRequest(ModelState);
                 }
 
-                var result = await _userService.CreateUser(userRegisterDTO, role);
+                var urlHelper = Url;
+                var scheme = Request.Scheme;
+                var result = await _userService.CreateUser(userRegisterDTO, role, urlHelper, scheme);
                 if (result)
                 {
                     _logger.LogInformation("CreateUser() - User {Email} was created successfully.", userRegisterDTO.Email);
@@ -47,9 +54,46 @@ namespace IoTControlTower.API.Controllers
             }
         }
 
+        [HttpGet("ConfirmEmail")]
+        [AllowAnonymous]
+        public async Task<IActionResult> ConfirmEmail(string token, string email)
+        {
+            _logger.LogInformation("ConfirmEmail() - Confirming email for user with email: {Email}", email);
+
+            try
+            {
+                var user = await _userManager.FindByEmailAsync(email);
+                if (user is not null)
+                {
+                    var result = await _userManager.ConfirmEmailAsync(user, token);
+                    if (result.Succeeded)
+                    {
+                        _logger.LogInformation("ConfirmEmail() - Email confirmed successfully for user with email: {Email}", email);
+                        return StatusCode(StatusCodes.Status200OK, new { Status = "Success", Message = "Email verified successfully" });
+                    }
+                    else
+                    {
+                        _logger.LogWarning("ConfirmEmail() - Failed to confirm email for user with email: {Email}", email);
+                        return StatusCode(StatusCodes.Status500InternalServerError, new { Status = "Error", Message = "Failed to confirm email" });
+                    }
+                }
+                else
+                {
+                    _logger.LogWarning("ConfirmEmail() - User with email {Email} does not exist", email);
+                    return StatusCode(StatusCodes.Status500InternalServerError, new { Status = "Error", Message = "User does not exist" });
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "ConfirmEmail() - An error occurred while confirming email for user with email: {Email}", email);
+                return StatusCode(StatusCodes.Status500InternalServerError, new { Status = "Error", Message = "An error occurred while confirming email" });
+            }
+        }
+
+
         [HttpPut("UpdateUser")]
         [AllowAnonymous]
-        public async Task<IActionResult> UpdateUser(UserUpdateDTO userUpdateDTO)
+        public async Task<IActionResult> UpdateUser([FromBody] UserUpdateDTO userUpdateDTO)
         {
             _logger.LogInformation("UpdateUser() - Attempting to update user: {UserName}", userUpdateDTO.UserName);
 
@@ -80,6 +124,5 @@ namespace IoTControlTower.API.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError, $"Error: {ex.Message}");
             }
         }
-
     }
 }

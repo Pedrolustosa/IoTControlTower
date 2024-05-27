@@ -1,56 +1,61 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Microsoft.AspNetCore.Identity;
 using IoTControlTower.Domain.Entities;
+using Microsoft.AspNetCore.Mvc.Routing;
 using IoTControlTower.Domain.Interface;
 using IoTControlTower.Application.DTO.User;
 using IoTControlTower.Application.Interface;
+using IoTControlTower.Application.DTO.Email;
 
 namespace IoTControlTower.Application.Service
 {
     public class UserService(UserManager<User> userManager,
-                                        RoleManager<IdentityRole> roleManager,
-                                        IUserRepository userRepository,
-                                        IMapper mapper,
-                                        ILogger<UserService> logger) : IUserService
+                             RoleManager<IdentityRole> roleManager,
+                             IUserRepository userRepository,
+                             IMapper mapper,
+                             ILogger<UserService> logger,
+                             IEmailService emailService) : IUserService
     {
-        private readonly UserManager<User> _userManager = userManager;
-        private readonly RoleManager<IdentityRole> _roleManager = roleManager;
-        private readonly IUserRepository _userRepository = userRepository;
         private readonly IMapper _mapper = mapper;
         private readonly ILogger<UserService> _logger = logger;
+        private readonly IEmailService _emailService = emailService;
+        private readonly UserManager<User> _userManager = userManager;
+        private readonly IUserRepository _userRepository = userRepository;
+        private readonly RoleManager<IdentityRole> _roleManager = roleManager;
 
         public async Task<bool> GetUserName(string userName)
         {
-            _logger.LogInformation("GetUserName - Retrieving user by username: {UserName}", userName);
+            _logger.LogInformation("GetUserName() - Retrieving user by username: {UserName}", userName);
             try
             {
                 return await _userRepository.GetUserName(userName);
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "GetUserName - Error retrieving user by username: {UserName}", userName);
+                _logger.LogError(ex, "GetUserName() - Error retrieving user by username: {UserName}", userName);
                 throw;
             }
         }
 
         public async Task<string> GetUserId()
         {
-            _logger.LogInformation("GetUserId - Retrieving user ID");
+            _logger.LogInformation("GetUserId() - Retrieving user ID");
             try
             {
                 return await _userRepository.GetUserId();
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "GetUserId - Error retrieving user ID");
+                _logger.LogError(ex, "GetUserId() - Error retrieving user ID");
                 throw;
             }
         }
 
         public async Task<UserDTO> GetUserData(UserDTO userDTO)
         {
-            _logger.LogInformation("GetUserData - Retrieving data for user: {UserName}", userDTO.UserName);
+            _logger.LogInformation("GetUserData() - Retrieving data for user: {UserName}", userDTO.UserName);
             try
             {
                 var user = _mapper.Map<User>(userDTO);
@@ -59,20 +64,20 @@ namespace IoTControlTower.Application.Service
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "GetUserData - Error retrieving data for user: {UserName}", userDTO.UserName);
+                _logger.LogError(ex, "GetUserData() - Error retrieving data for user: {UserName}", userDTO.UserName);
                 throw;
             }
         }
 
-        public async Task<bool> CreateUser(UserRegisterDTO userRegisterDTO, string role)
+        public async Task<bool> CreateUser(UserRegisterDTO userRegisterDTO, string role, IUrlHelper urlHelper, string scheme)
         {
-            _logger.LogInformation("CreateUser - Creating user: {UserName}", userRegisterDTO.UserName);
+            _logger.LogInformation("CreateUser() - Creating user: {UserName}", userRegisterDTO.UserName);
             try
             {
                 var hasUser = await GetUserName(userRegisterDTO.UserName);
                 if (hasUser)
                 {
-                    _logger.LogWarning("CreateUser - User already exists: {UserName}", userRegisterDTO.UserName);
+                    _logger.LogWarning("CreateUser() - User already exists: {UserName}", userRegisterDTO.UserName);
                     throw new Exception("User already exists.");
                 }
 
@@ -80,7 +85,7 @@ namespace IoTControlTower.Application.Service
                 var userExist = await _userManager.FindByEmailAsync(user.Email);
                 if (userExist != null)
                 {
-                    _logger.LogWarning("CreateUser - Email already exists: {Email}", user.Email);
+                    _logger.LogWarning("CreateUser() - Email already exists: {Email}", user.Email);
                     throw new Exception("Email already exists.");
                 }
 
@@ -89,50 +94,78 @@ namespace IoTControlTower.Application.Service
                     var result = await _userManager.CreateAsync(user, userRegisterDTO.Password);
                     if (!result.Succeeded)
                     {
-                        _logger.LogError("CreateUser - Failed to create user: {UserName}", userRegisterDTO.UserName);
+                        _logger.LogError("CreateUser() - Failed to create user: {UserName}", userRegisterDTO.UserName);
                         throw new Exception("Failed to create user.");
                     }
 
                     await _userManager.AddToRoleAsync(user, role);
-                    _logger.LogInformation("CreateUser - User created successfully: {UserName}", userRegisterDTO.UserName);
+                    var token = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+                    string? confirmationLink = ConfirmationLink(userRegisterDTO, urlHelper, scheme, token);
+
+                    var message = new MessageDTO(new string[] { userRegisterDTO.Email! }, "Confirmation email link", confirmationLink!);
+                    _emailService.SendEmail(message);
+                    _logger.LogInformation("CreateUser() - User created successfully: {UserName}", userRegisterDTO.UserName);
                     return true;
                 }
                 else
                 {
-                    _logger.LogWarning("CreateUser - Invalid role: {Role}", role);
+                    _logger.LogWarning("CreateUser() - Invalid role: {Role}", role);
                     throw new Exception("Please choose a valid role for this user.");
                 }
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "CreateUser - Error creating user: {UserName}", userRegisterDTO.UserName);
+                _logger.LogError(ex, "CreateUser() - Error creating user: {UserName}", userRegisterDTO.UserName);
                 throw;
             }
         }
 
+        private string ConfirmationLink(UserRegisterDTO userRegisterDTO, IUrlHelper urlHelper, string scheme, string token)
+        {
+            _logger.LogInformation("ConfirmationLink() - Generating confirmation link for user with email: {Email}", userRegisterDTO.Email);
+
+            var confirmationLink = urlHelper.Action(new UrlActionContext
+            {
+                Action = nameof(ConfirmEmail),
+                Controller = "Users",
+                Values = new { token, email = userRegisterDTO.Email },
+                Protocol = scheme
+            });
+
+            if (confirmationLink is null)
+            {
+                _logger.LogError("ConfirmationLink() - Failed to generate confirmation link.");
+                throw new Exception("Failed to generate confirmation link.");
+            }
+
+            _logger.LogInformation("ConfirmationLink() - Confirmation link generated successfully for user with email: {Email}", userRegisterDTO.Email);
+
+            return confirmationLink;
+        }
+
         public async Task<UserUpdateDTO> UpdateUser(UserUpdateDTO userUpdateDTO)
         {
-            _logger.LogInformation("UpdateUser - Updating user: {UserName}", userUpdateDTO.UserName);
             try
             {
+                _logger.LogInformation("UpdateUser() - Updating user: {UserName}", userUpdateDTO.UserName);
                 var user = _mapper.Map<User>(userUpdateDTO);
                 var actualUser = await _userRepository.GetUserData(user) ?? throw new Exception("This user does not exist!");
 
                 var originalUpdateDate = actualUser.UpdateDate;
                 var originalLastLogin = actualUser.LastLogin;
-                _mapper.Map(userUpdateDTO, actualUser);
-                if (userUpdateDTO.UpdateDate is null)
-                    actualUser.UpdateDate = originalUpdateDate;
-                if (userUpdateDTO.LastLogin is null)
-                    actualUser.LastLogin = originalLastLogin;
 
-                if (userUpdateDTO.Password is not null)
+                _mapper.Map(userUpdateDTO, actualUser);
+
+                actualUser.UpdateDate ??= originalUpdateDate;
+                actualUser.LastLogin ??= originalLastLogin;
+
+                if (!string.IsNullOrEmpty(userUpdateDTO.Password))
                 {
                     var token = await _userManager.GeneratePasswordResetTokenAsync(actualUser);
                     var resetResult = await _userManager.ResetPasswordAsync(actualUser, token, userUpdateDTO.Password);
                     if (!resetResult.Succeeded)
                     {
-                        _logger.LogError("UpdateUser - Failed to reset password for user: {UserName}", userUpdateDTO.UserName);
+                        _logger.LogError("UpdateUser() - Failed to reset password for user: {UserName}", userUpdateDTO.UserName);
                         throw new Exception("Failed to reset password.");
                     }
                 }
@@ -140,20 +173,47 @@ namespace IoTControlTower.Application.Service
                 var updateResult = await _userManager.UpdateAsync(actualUser);
                 if (!updateResult.Succeeded)
                 {
-                    _logger.LogError("UpdateUser - Failed to update user: {UserName}", userUpdateDTO.UserName);
+                    _logger.LogError("UpdateUser() - Failed to update user: {UserName}", userUpdateDTO.UserName);
                     throw new Exception("Failed to update user.");
                 }
 
                 var updatedUser = await _userRepository.GetUserData(actualUser);
-                _logger.LogInformation("UpdateUser - User updated successfully: {UserName}", userUpdateDTO.UserName);
+                _logger.LogInformation("UpdateUser() - User updated successfully: {UserName}", userUpdateDTO.UserName);
+                _logger.LogDebug("Updated user details: {@UpdatedUser}", updatedUser);
+
                 return _mapper.Map<UserUpdateDTO>(updatedUser);
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "UpdateUser - Error updating user: {UserName}", userUpdateDTO.UserName);
+                _logger.LogError(ex, "UpdateUser() - Error updating user: {UserName}", userUpdateDTO.UserName);
                 throw;
             }
         }
 
+        public async Task<string> ConfirmEmail(string token, string email)
+        {
+            _logger.LogInformation("ConfirmEmail() - Confirming email for user with email: {Email}", email);
+
+            try
+            {
+                var user = await _userManager.FindByEmailAsync(email);
+                if (user is not null)
+                {
+                    var result = await _userManager.ConfirmEmailAsync(user, token);
+                    if (result.Succeeded)
+                    {
+                        _logger.LogInformation("ConfirmEmail() - Email confirmed successfully for user with email: {Email}", email);
+                        return "Success: Email verified successfully";
+                    }
+                }
+                _logger.LogWarning("ConfirmEmail() - User with email {Email} does not exist", email);
+                return "Error: This user does not exist.";
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "ConfirmEmail() - An error occurred while confirming email for user with email: {Email}", email);
+                throw;
+            }
+        }
     }
 }
