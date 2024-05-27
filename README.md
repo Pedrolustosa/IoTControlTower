@@ -34,6 +34,7 @@ The project follows an architecture based on Clean Architecture and DDD (Domain-
 - **Serilog**: Library used for logging and event auditing in the application.
 - **SQL Server**: Relational database used to store application data.
 - **FluentValidation**: Library used to validate complex objects, ensuring data consistency before processing.
+- **NETCore.MailKit**: Library used to send emails via SMTP with support for Google SMTP servers.
 
 ## Features
 
@@ -42,6 +43,7 @@ The project follows an architecture based on Clean Architecture and DDD (Domain-
 - **Authentication and Authorization**: Uses JWT and Identity to manage secure access to application resources.
 - **Logging and Auditing**: Implemented with Serilog for efficient system operation monitoring.
 - **Data Validation**: Using FluentValidation to ensure the integrity and validity of input data.
+- **Email Notifications**: Utilizes NETCore.MailKit for sending email notifications via Google SMTP.
 
 ## Running the Project
 
