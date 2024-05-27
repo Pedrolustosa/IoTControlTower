@@ -8,6 +8,7 @@ using IoTControlTower.Infra.Repository;
 using Microsoft.Extensions.Configuration;
 using IoTControlTower.Application.Mapping;
 using IoTControlTower.Application.Service;
+using IoTControlTower.Application.DTO.Email;
 using IoTControlTower.Application.Validator;
 using IoTControlTower.Application.Interface;
 using IoTControlTower.Application.DTO.Device;
@@ -25,6 +26,11 @@ namespace IoTControlTower.Infra.IoC
             services.AddIdentity<User, IdentityRole>().AddEntityFrameworkStores<IoTControlTowerContext>()
                                                       .AddDefaultTokenProviders();
 
+            //Email configuration
+            var emailConfig = configuration.GetSection("EmailConfiguration")
+                .Get<EmailDTO>();
+            services.AddSingleton(emailConfig);
+
             //FluentValidator
             services.AddTransient<IValidator<DeviceDTO>, DeviceValidator>();
 
@@ -37,6 +43,7 @@ namespace IoTControlTower.Infra.IoC
 
             //Serices
             services.AddScoped<IUserService, UserService>();
+            services.AddScoped<IEmailService, EmailService>();
             services.AddScoped<IDeviceService, DeviceService>();
             services.AddScoped<IAuthenticateService, AuthenticateService>();
             return services;
