@@ -35,9 +35,9 @@ public class User : IdentityUser
         ValidateDomain(fullName, userName, password, email, dateOfBirth, gender, phoneNumber, address, city, state, country, postalCode, lastLogin, updateDate, registrationDate, lastPasswordChangeDate);
     }
 
-    public void Update(string fullName, string userName, string password, string email, DateTime? dateOfBirth, string gender, string phoneNumber, string address, string city, string state, string country, string postalCode, DateTime? lastLogin, DateTime? updateDate, DateTime? lastPasswordChangeDate)
+    public void Update(string fullName, string userName, string password, string email, DateTime? dateOfBirth, string gender, string phoneNumber, string address, string city, string state, string country, string postalCode, DateTime? lastLogin, DateTime? updateDate, DateTime? registrationDate, DateTime? lastPasswordChangeDate)
     {
-        ValidateDomain(fullName, userName, password, email, dateOfBirth, gender, phoneNumber, address, city, state, country, postalCode, lastLogin, updateDate, null, lastPasswordChangeDate);
+        ValidateDomain(fullName, userName, password, email, dateOfBirth, gender, phoneNumber, address, city, state, country, postalCode, lastLogin, updateDate, registrationDate, lastPasswordChangeDate);
     }
 
     private void ValidateDomain(string fullName, string userName, string password, string email, DateTime? dateOfBirth, string gender, string phoneNumber, string address, string city, string state, string country, string postalCode, DateTime? lastLogin, DateTime? updateDate, DateTime? registrationDate, DateTime? lastPasswordChangeDate)

@@ -1,11 +1,11 @@
 ﻿using IoTControlTower.Domain.Entities;
 
-namespace IoTControlTower.Domain.Interface.UserRepository
+namespace IoTControlTower.Domain.Interface.UserRepository;
+
+public interface IUserRepository
 {
-    public interface IUserRepository
-    {
-        Task<string> GetUserId();
-        Task<bool> GetUserName(string userName);
-        Task<User> GetUserData(User user);
-    }
+    Task<string> GetUserId();
+    Task<User> GetUserById(Guid id);
+    Task<bool> GetUserName(string userName);
+    Task<User> GetUserData(User user);
 }

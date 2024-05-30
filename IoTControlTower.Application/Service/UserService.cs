@@ -1,65 +1,51 @@
 ﻿using MediatR;
 using AutoMapper;
 using Microsoft.Extensions.Logging;
-using Microsoft.AspNetCore.Identity;
 using IoTControlTower.Domain.Entities;
 using IoTControlTower.Application.Interface;
 using IoTControlTower.Application.DTO.Users;
+using IoTControlTower.Application.Users.Queries;
 using IoTControlTower.Application.Users.Commands;
 using IoTControlTower.Domain.Interface.UserRepository;
 
 namespace IoTControlTower.Application.Service;
 
-public class UserService(UserManager<User> userManager,
-                         RoleManager<IdentityRole> roleManager,
-                         IUserRepository userRepository,
+public class UserService(IUserRepository userRepository,
                          IMapper mapper,
                          IMediator mediator,
-                         ILogger<UserService> logger,
-                         IEmailService emailService) : IUserService
+                         ILogger<UserService> logger) : IUserService
 {
     private readonly IMapper _mapper = mapper;
     private readonly ILogger<UserService> _logger = logger;
-    private readonly UserManager<User> _userManager = userManager;
     private readonly IUserRepository _userRepository = userRepository;
     private readonly IMediator _mediator = mediator;
 
     public async Task<bool> GetUserName(string userName)
     {
-        _logger.LogInformation("GetUserName() - Retrieving user by username: {UserName}", userName);
         try
         {
-            return await _userRepository.GetUserName(userName);
+            _logger.LogInformation("GetUserName() - Checking if username exists: {UserName}", userName);
+            var exists = await _userRepository.GetUserName(userName);
+            _logger.LogInformation("GetUserName() - Username check result: {UserNameExists}", exists);
+            return exists;
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "GetUserName() - Error retrieving user by username: {UserName}", userName);
-            throw;
-        }
-    }
-
-    public async Task<string> GetUserId()
-    {
-        _logger.LogInformation("GetUserId() - Retrieving user ID");
-        try
-        {
-            return await _userRepository.GetUserId();
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError(ex, "GetUserId() - Error retrieving user ID");
+            _logger.LogError(ex, "GetUserName() - Error checking username: {UserName}", userName);
             throw;
         }
     }
 
     public async Task<UserDTO> GetUserData(UserDTO userDTO)
     {
-        _logger.LogInformation("GetUserData() - Retrieving data for user: {UserName}", userDTO.UserName);
         try
         {
+            _logger.LogInformation("GetUserData() - Retrieving data for user: {UserName}", userDTO.UserName);
             var user = _mapper.Map<User>(userDTO);
             var dataUser = await _userRepository.GetUserData(user);
-            return _mapper.Map<UserDTO>(dataUser);
+            var userData = _mapper.Map<UserDTO>(dataUser);
+            _logger.LogInformation("GetUserData() - User data retrieved successfully for user: {UserName}", userDTO.UserName);
+            return userData;
         }
         catch (Exception ex)
         {
@@ -72,13 +58,16 @@ public class UserService(UserManager<User> userManager,
     {
         try
         {
-            _logger.LogInformation("CreateDevice");
-            var createDeviceCommand = _mapper.Map<CreateUserCommand>(userRegisterDTO);
-            await _mediator.Send(createDeviceCommand);
-            return _mapper.Map<UserRegisterDTO>(createDeviceCommand);
+            _logger.LogInformation("CreateUser() - Creating user: {UserName}", userRegisterDTO.UserName);
+            var createUserCommand = _mapper.Map<CreateUserCommand>(userRegisterDTO);
+            await _mediator.Send(createUserCommand);
+            var createdUser = _mapper.Map<UserRegisterDTO>(createUserCommand);
+            _logger.LogInformation("CreateUser() - User created successfully: {UserName}", userRegisterDTO.UserName);
+            return createdUser;
         }
-        catch (Exception)
+        catch (Exception ex)
         {
+            _logger.LogError(ex, "CreateUser() - Error creating user: {UserName}", userRegisterDTO.UserName);
             throw;
         }
     }
@@ -88,44 +77,45 @@ public class UserService(UserManager<User> userManager,
         try
         {
             _logger.LogInformation("UpdateUser() - Updating user: {UserName}", userUpdateDTO.UserName);
-            var user = _mapper.Map<User>(userUpdateDTO);
-            var actualUser = await _userRepository.GetUserData(user) ?? throw new Exception("This user does not exist!");
-
-            var originalUpdateDate = actualUser.UpdateDate;
-            var originalLastLogin = actualUser.LastLogin;
-
-            _mapper.Map(userUpdateDTO, actualUser);
-
-            actualUser.UpdateDate ??= originalUpdateDate;
-            actualUser.LastLogin ??= originalLastLogin;
-
-            if (!string.IsNullOrEmpty(userUpdateDTO.Password))
-            {
-                var token = await _userManager.GeneratePasswordResetTokenAsync(actualUser);
-                var resetResult = await _userManager.ResetPasswordAsync(actualUser, token, userUpdateDTO.Password);
-                if (!resetResult.Succeeded)
-                {
-                    _logger.LogError("UpdateUser() - Failed to reset password for user: {UserName}", userUpdateDTO.UserName);
-                    throw new Exception("Failed to reset password.");
-                }
-            }
-
-            var updateResult = await _userManager.UpdateAsync(actualUser);
-            if (!updateResult.Succeeded)
-            {
-                _logger.LogError("UpdateUser() - Failed to update user: {UserName}", userUpdateDTO.UserName);
-                throw new Exception("Failed to update user.");
-            }
-
-            var updatedUser = await _userRepository.GetUserData(actualUser);
+            var updateUserCommand = _mapper.Map<UpdateUserCommand>(userUpdateDTO);
+            var updatedUser = await _mediator.Send(updateUserCommand);
+            var updatedUserDTO = _mapper.Map<UserUpdateDTO>(updatedUser);
             _logger.LogInformation("UpdateUser() - User updated successfully: {UserName}", userUpdateDTO.UserName);
-            _logger.LogDebug("Updated user details: {@UpdatedUser}", updatedUser);
-
-            return _mapper.Map<UserUpdateDTO>(updatedUser);
+            return updatedUserDTO;
         }
         catch (Exception ex)
         {
             _logger.LogError(ex, "UpdateUser() - Error updating user: {UserName}", userUpdateDTO.UserName);
+            throw;
+        }
+    }
+
+    public async Task<UserDTO> GetUserById(Guid userId)
+    {
+        try
+        {
+            _logger.LogInformation("GetUserById() - Retrieving user by ID: {UserId}", userId);
+            var userByIdQuery = new GetUserByIdQuery { Id = userId };
+            if (userByIdQuery is null)
+            {
+                _logger.LogWarning("GetUserById() - Query object is null for ID: {UserId}", userId);
+                throw new ArgumentNullException(nameof(userByIdQuery), "Query object cannot be null.");
+            }
+
+            var result = await _mediator.Send(userByIdQuery);
+            if (result is null)
+            {
+                _logger.LogWarning("GetUserById() - No user found with ID: {UserId}", userId);
+                throw new Exception("User not found.");
+            }
+
+            var userDTO = _mapper.Map<UserDTO>(result);
+            _logger.LogInformation("GetUserById() - User retrieved successfully by ID: {UserId}", userId);
+            return userDTO;
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "GetUserById() - Error retrieving user by ID: {UserId}", userId);
             throw;
         }
     }

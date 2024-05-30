@@ -4,6 +4,7 @@ using IoTControlTower.Application.Devices.Queries;
 using IoTControlTower.Application.Devices.Commands;
 using IoTControlTower.Application.DTO.Users;
 using IoTControlTower.Application.Users.Commands;
+using IoTControlTower.Domain.Entities;
 
 namespace IoTControlTower.Application.Mapping
 {
@@ -16,6 +17,7 @@ namespace IoTControlTower.Application.Mapping
             CreateMap<DeviceCreateDTO, CreateDeviceCommand>().ReverseMap();
             CreateMap<DeviceUpdateDTO, UpdateDeviceCommand>().ReverseMap();
 
+            CreateMap<User, UserUpdateDTO>().ReverseMap();
             CreateMap<UserRegisterDTO, CreateUserCommand>().ReverseMap();
             CreateMap<UserUpdateDTO, UpdateUserCommand>().ReverseMap();
         }

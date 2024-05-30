@@ -48,9 +48,7 @@ namespace IoTControlTower.Application.Service
                     var user = await _userService.GetUserData(new UserDTO { UserName = loginDTO.UserName });
                     if (user != null)
                     {
-                        user.LastLogin = DateTime.Now;
                         var userUpdateDTO = _mapper.Map<UserUpdateDTO>(user);
-                        userUpdateDTO.UpdateDate = null;
                         await _userService.UpdateUser(userUpdateDTO);
                     }
                     return true;
