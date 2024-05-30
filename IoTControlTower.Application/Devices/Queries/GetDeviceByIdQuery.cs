@@ -7,9 +7,9 @@ public class GetDeviceByIdQuery : IRequest<Device>
 {
     public int Id { get; set; }
 
-    public class GetDeviceByIdQueryHandler(IDevicesDapperRepository devicesDapperRepository) : IRequestHandler<GetDeviceByIdQuery, Device>
+    public class GetDeviceByIdQueryHandler(IDeviceDapperRepository devicesDapperRepository) : IRequestHandler<GetDeviceByIdQuery, Device>
     {
-        private readonly IDevicesDapperRepository _devicesDapperRepository = devicesDapperRepository;
+        private readonly IDeviceDapperRepository _devicesDapperRepository = devicesDapperRepository;
 
         public async Task<Device> Handle(GetDeviceByIdQuery request, CancellationToken cancellationToken)
         {

@@ -10,22 +10,22 @@ namespace IoTControlTower.Infra.Repository;
 
 public class UnitOfWork(IoTControlTowerContext ioTControlTowerContext, 
                         ILogger<UserEFRepository> logger, 
-                        ILogger<DevicesEFRepository> loggerEF, 
+                        ILogger<DeviceEFRepository> loggerEF, 
                         IHttpContextAccessor httpContextAccessor) : IUnitOfWork, IDisposable
 {
     private IUserRepository _userRepository;
-    private IDevicesRepository _devicesRepository;
+    private IDeviceRepository _devicesRepository;
 
     private readonly ILogger<UserEFRepository> _logger = logger;
-    private readonly ILogger<DevicesEFRepository> _loggerEF = loggerEF;
+    private readonly ILogger<DeviceEFRepository> _loggerEF = loggerEF;
     private readonly IHttpContextAccessor _httpContextAccessor = httpContextAccessor;
     private readonly IoTControlTowerContext _controlTowerContext = ioTControlTowerContext;
 
-    public IDevicesRepository DevicesRepository 
+    public IDeviceRepository DevicesRepository 
     {
         get 
         {
-            return _devicesRepository ??= new DevicesEFRepository(_controlTowerContext, _loggerEF);
+            return _devicesRepository ??= new DeviceEFRepository(_controlTowerContext, _loggerEF);
         }
     }
 

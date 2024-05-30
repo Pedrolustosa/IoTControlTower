@@ -45,7 +45,7 @@ namespace IoTControlTower.Application.Service
                 if (result.Succeeded)
                 {
                     _logger.LogInformation("Authenticate() - User authenticated successfully: {UserName}", loginDTO.UserName);
-                    var user = await _userService.GetUserData(new UserDTO { UserName = loginDTO.UserName });
+                    var user = await _userService.GetUserData(new AuthenticateDTO { UserName = loginDTO.UserName });
                     if (user != null)
                     {
                         var userUpdateDTO = _mapper.Map<UserUpdateDTO>(user);

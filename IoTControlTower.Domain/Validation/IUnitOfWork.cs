@@ -4,7 +4,7 @@ namespace IoTControlTower.Domain.Validation;
 
 public interface IUnitOfWork
 {
-    IDevicesRepository DevicesRepository { get; }
+    IDeviceRepository DevicesRepository { get; }
     IUserRepository UserRepository { get; }
 
     Task CommitAsync();

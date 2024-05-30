@@ -4,7 +4,7 @@ using IoTControlTower.Domain.Entities;
 
 namespace IoTControlTower.Infra.Repository.DeviceRepository;
 
-public class DevicesDapperRepository(IDbConnection dbConnection) : IDevicesDapperRepository
+public class DeviceDapperRepository(IDbConnection dbConnection) : IDeviceDapperRepository
 {
     private readonly IDbConnection _dbConnection = dbConnection;
 

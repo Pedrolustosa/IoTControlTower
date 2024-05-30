@@ -12,12 +12,18 @@ namespace IoTControlTower.Application.Mapping
     {
         public DomainToDTOProfile()
         {
+            CreateMap<Device, DeviceDTO>().ReverseMap();
             CreateMap<DeviceDTO, GetDevicesQuery>().ReverseMap();
             CreateMap<DeviceDTO, GetDeviceByIdQuery>().ReverseMap();
             CreateMap<DeviceCreateDTO, CreateDeviceCommand>().ReverseMap();
             CreateMap<DeviceUpdateDTO, UpdateDeviceCommand>().ReverseMap();
 
+            CreateMap<User, UserDTO>().ReverseMap();
             CreateMap<User, UserUpdateDTO>().ReverseMap();
+            CreateMap<User, AuthenticateDTO>().ReverseMap();
+            CreateMap<UserDTO, UserUpdateDTO>().ReverseMap();
+            CreateMap<UserDTO, AuthenticateDTO>().ReverseMap();
+            CreateMap<AuthenticateDTO, UserUpdateDTO>().ReverseMap();
             CreateMap<UserRegisterDTO, CreateUserCommand>().ReverseMap();
             CreateMap<UserUpdateDTO, UpdateUserCommand>().ReverseMap();
         }

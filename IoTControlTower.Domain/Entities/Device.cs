@@ -39,6 +39,6 @@ public class Device : Entity
         Description = description;
         Manufacturer = manufacturer; 
         Url = url;
-        IsActive = isActive.HasValue;
+        IsActive = isActive.Value;
     }
 }

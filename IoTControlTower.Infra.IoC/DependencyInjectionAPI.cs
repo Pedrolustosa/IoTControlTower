@@ -59,8 +59,9 @@ public static class DependencyInjectionAPI
         // Repositories
         services.AddScoped<IUnitOfWork, UnitOfWork>();
         services.AddScoped<IUserRepository, UserEFRepository>();
-        services.AddScoped<IDevicesRepository, DevicesEFRepository>();
-        services.AddScoped<IDevicesDapperRepository, DevicesDapperRepository>();
+        services.AddScoped<IUserDapperRepository, UserDapperRepository>();
+        services.AddScoped<IDeviceRepository, DeviceEFRepository>();
+        services.AddScoped<IDeviceDapperRepository, DeviceDapperRepository>();
 
         // Registro do UnitOfWork
         services.AddScoped<UnitOfWork>();

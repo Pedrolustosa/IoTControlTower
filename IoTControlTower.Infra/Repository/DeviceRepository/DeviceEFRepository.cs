@@ -4,9 +4,9 @@ using IoTControlTower.Domain.Entities;
 
 namespace IoTControlTower.Infra.Repository.DeviceRepository;
 
-public class DevicesEFRepository(IoTControlTowerContext ioTControlTowerContext, ILogger<DevicesEFRepository> logger) : IDevicesRepository
+public class DeviceEFRepository(IoTControlTowerContext ioTControlTowerContext, ILogger<DeviceEFRepository> logger) : IDeviceRepository
 {
-    private readonly ILogger<DevicesEFRepository> _logger = logger;
+    private readonly ILogger<DeviceEFRepository> _logger = logger;
     private readonly IoTControlTowerContext _context = ioTControlTowerContext;
 
     public async Task<Device> GetDeviceById(int deviceId)

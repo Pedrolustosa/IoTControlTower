@@ -36,20 +36,20 @@ public class UserService(IUserRepository userRepository,
         }
     }
 
-    public async Task<UserDTO> GetUserData(UserDTO userDTO)
+    public async Task<AuthenticateDTO> GetUserData(AuthenticateDTO authenticateDTO)
     {
         try
         {
-            _logger.LogInformation("GetUserData() - Retrieving data for user: {UserName}", userDTO.UserName);
-            var user = _mapper.Map<User>(userDTO);
+            _logger.LogInformation("GetUserData() - Retrieving data for user: {UserName}", authenticateDTO.UserName);
+            var user = _mapper.Map<User>(authenticateDTO);
             var dataUser = await _userRepository.GetUserData(user);
-            var userData = _mapper.Map<UserDTO>(dataUser);
-            _logger.LogInformation("GetUserData() - User data retrieved successfully for user: {UserName}", userDTO.UserName);
+            var userData = _mapper.Map<AuthenticateDTO>(dataUser);
+            _logger.LogInformation("GetUserData() - User data retrieved successfully for user: {UserName}", authenticateDTO.UserName);
             return userData;
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "GetUserData() - Error retrieving data for user: {UserName}", userDTO.UserName);
+            _logger.LogError(ex, "GetUserData() - Error retrieving data for user: {UserName}", authenticateDTO.UserName);
             throw;
         }
     }

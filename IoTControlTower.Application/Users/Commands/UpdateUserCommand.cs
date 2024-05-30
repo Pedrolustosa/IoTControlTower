@@ -24,10 +24,12 @@ public class UpdateUserCommand : UserCommandBase
                 var existingUser = await _unitOfWork.UserRepository.GetUserById(request.Id)
                     ?? throw new InvalidOperationException("User not found");
 
+                var password = existingUser.PasswordHash ??= request.Password;
+
                 existingUser.Update(
                     request.FullName,
                     request.UserName,
-                    request.Password,
+                    password,
                     request.Email,
                     request.DateOfBirth,
                     request.Gender,

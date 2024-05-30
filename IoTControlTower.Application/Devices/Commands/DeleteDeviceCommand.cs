@@ -10,10 +10,10 @@ public class DeleteDeviceCommand : IRequest<Device>
 {
     public int Id { get; set; }
 
-    public class DeleteDeviceCommandHandler(IUnitOfWork unitOfWork, ILogger<DevicesEFRepository> logger) : IRequestHandler<DeleteDeviceCommand, Device>
+    public class DeleteDeviceCommandHandler(IUnitOfWork unitOfWork, ILogger<DeviceEFRepository> logger) : IRequestHandler<DeleteDeviceCommand, Device>
     {
         private readonly IUnitOfWork _unitOfWork = unitOfWork;
-        private readonly ILogger<DevicesEFRepository> _logger = logger;
+        private readonly ILogger<DeviceEFRepository> _logger = logger;
 
         public async Task<Device> Handle(DeleteDeviceCommand request, CancellationToken CancellationToken)
         {

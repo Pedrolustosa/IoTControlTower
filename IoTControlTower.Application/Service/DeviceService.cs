@@ -18,17 +18,32 @@ namespace IoTControlTower.Application.Service
         {
             try
             {
-                _logger.LogInformation("GetDevices");
+                _logger.LogInformation("GetDevices() - Retrieving devices");
                 var devicesQuery = new GetDevicesQuery();
-                if (devicesQuery is null) throw new ArgumentNullException(nameof(devicesQuery));
+                if (devicesQuery is null)
+                {
+                    _logger.LogWarning("GetDevices() - Device query is null");
+                    throw new ArgumentNullException(nameof(devicesQuery), "Query object cannot be null.");
+                }
+
                 var result = await _mediator.Send(devicesQuery);
-                return _mapper.Map<IEnumerable<DeviceDTO>>(result);
+                if (result is null)
+                {
+                    _logger.LogWarning("GetDevices() - No devices found");
+                    return Enumerable.Empty<DeviceDTO>();
+                }
+
+                var deviceDTOs = _mapper.Map<List<DeviceDTO>>(result);
+                _logger.LogInformation("GetDevices() - Devices retrieved successfully");
+                return deviceDTOs;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                _logger.LogError(ex, "GetDevices() - Error retrieving devices");
                 throw;
             }
         }
+
 
         public async Task<DeviceDTO> GetDeviceById(int? id)
         {

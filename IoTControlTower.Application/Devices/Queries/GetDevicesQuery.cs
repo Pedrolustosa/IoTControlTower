@@ -5,9 +5,9 @@ namespace IoTControlTower.Application.Devices.Queries;
 
 public class GetDevicesQuery : IRequest<IEnumerable<Device>>
 {
-    public class GetDevicesQueryHandler(IDevicesDapperRepository devicesDapperRepository) : IRequestHandler<GetDevicesQuery, IEnumerable<Device>>
+    public class GetDevicesQueryHandler(IDeviceDapperRepository devicesDapperRepository) : IRequestHandler<GetDevicesQuery, IEnumerable<Device>>
     {
-        private readonly IDevicesDapperRepository _devicesDapperRepository = devicesDapperRepository;
+        private readonly IDeviceDapperRepository _devicesDapperRepository = devicesDapperRepository;
 
         public async Task<IEnumerable<Device>> Handle(GetDevicesQuery request, CancellationToken cancellationToken)
         {

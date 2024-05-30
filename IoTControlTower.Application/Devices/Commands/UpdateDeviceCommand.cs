@@ -10,10 +10,10 @@ public class UpdateDeviceCommand : DeviceCommandBase
 {
     public int Id { get; set; }
 
-    public class UpdateDeviceCommandHandler(UnitOfWork unitOfWork, ILogger<DevicesEFRepository> logger) : IRequestHandler<UpdateDeviceCommand, Device>
+    public class UpdateDeviceCommandHandler(UnitOfWork unitOfWork, ILogger<DeviceEFRepository> logger) : IRequestHandler<UpdateDeviceCommand, Device>
     {
         private readonly UnitOfWork _unitOfWork = unitOfWork;
-        private readonly ILogger<DevicesEFRepository> _logger = logger;
+        private readonly ILogger<DeviceEFRepository> _logger = logger;
 
         public async Task<Device> Handle(UpdateDeviceCommand request, CancellationToken cancellationToken)
         {

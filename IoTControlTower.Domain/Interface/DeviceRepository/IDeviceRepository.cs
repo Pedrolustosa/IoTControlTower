@@ -1,6 +1,6 @@
 ﻿using IoTControlTower.Domain.Entities;
 
-public interface IDevicesRepository
+public interface IDeviceRepository
 {
     Task<Device> GetDeviceById(int id);
     Task<Device> AddDeviceAsync(Device device);

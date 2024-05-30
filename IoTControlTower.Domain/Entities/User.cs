@@ -42,9 +42,9 @@ public class User : IdentityUser
 
     private void ValidateDomain(string fullName, string userName, string password, string email, DateTime? dateOfBirth, string gender, string phoneNumber, string address, string city, string state, string country, string postalCode, DateTime? lastLogin, DateTime? updateDate, DateTime? registrationDate, DateTime? lastPasswordChangeDate)
     {
-        DomainValidation.When(string.IsNullOrEmpty(fullName), "Invalid description. Required");
-        DomainValidation.When(string.IsNullOrEmpty(userName), "Invalid manufacturer. Required");
-        DomainValidation.When(string.IsNullOrEmpty(password), "Invalid manufacturer. Required");
+        DomainValidation.When(string.IsNullOrEmpty(fullName), "Invalid fullName. Required");
+        DomainValidation.When(string.IsNullOrEmpty(userName), "Invalid userName. Required");
+        DomainValidation.When(string.IsNullOrEmpty(password), "Invalid password. Required");
 
         UserName = userName;
         PasswordHash = password;
