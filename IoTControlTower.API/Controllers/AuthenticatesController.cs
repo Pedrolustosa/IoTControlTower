@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using IoTControlTower.API.Models;
-using IoTControlTower.Application.DTO;
 using IoTControlTower.Application.Interface;
+using IoTControlTower.Application.DTO.Users;
 
 namespace IoTControlTower.API.Controllers
 {

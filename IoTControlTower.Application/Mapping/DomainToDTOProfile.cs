@@ -1,8 +1,9 @@
 ﻿using AutoMapper;
-using IoTControlTower.Domain.Entities;
-using IoTControlTower.Application.DTO;
-using IoTControlTower.Application.DTO.User;
 using IoTControlTower.Application.DTO.Device;
+using IoTControlTower.Application.Devices.Queries;
+using IoTControlTower.Application.Devices.Commands;
+using IoTControlTower.Application.DTO.Users;
+using IoTControlTower.Application.Users.Commands;
 
 namespace IoTControlTower.Application.Mapping
 {
@@ -10,14 +11,13 @@ namespace IoTControlTower.Application.Mapping
     {
         public DomainToDTOProfile()
         {
-            CreateMap<Device, DeviceDTO>().ReverseMap();
-            CreateMap<Command, CommandDTO>().ReverseMap();
-            CreateMap<CommandDescription, CommandDescriptionDTO>().ReverseMap();
-            CreateMap<Parameter, ParameterDTO>().ReverseMap();
-            CreateMap<User, UserDTO>().ReverseMap();
-            CreateMap<User, UserRegisterDTO>().ReverseMap();
-            CreateMap<User, UserUpdateDTO>().ReverseMap();
-            CreateMap<UserDTO, UserUpdateDTO>().ReverseMap();
+            CreateMap<DeviceDTO, GetDevicesQuery>().ReverseMap();
+            CreateMap<DeviceDTO, GetDeviceByIdQuery>().ReverseMap();
+            CreateMap<DeviceCreateDTO, CreateDeviceCommand>().ReverseMap();
+            CreateMap<DeviceUpdateDTO, UpdateDeviceCommand>().ReverseMap();
+
+            CreateMap<UserRegisterDTO, CreateUserCommand>().ReverseMap();
+            CreateMap<UserUpdateDTO, UpdateUserCommand>().ReverseMap();
         }
     }
 }

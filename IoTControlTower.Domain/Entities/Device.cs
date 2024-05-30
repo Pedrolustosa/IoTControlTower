@@ -1,55 +1,44 @@
-﻿namespace IoTControlTower.Domain.Entities
+﻿using System.Text.Json.Serialization;
+using IoTControlTower.Domain.Validation;
+
+namespace IoTControlTower.Domain.Entities;
+
+public class Device : Entity
 {
-    public class Device
+    public string? Description { get; private set; }
+    public string? Manufacturer { get; private set; }
+    public string? Url { get; private set; }
+    public bool? IsActive { get; private set; }
+
+    public Device() { }
+
+    public Device(string description, string manufacturer, string url, bool? isActive)
     {
-        public int Id { get; private set; }
-        public string Description { get; private set; }
-        public string Manufacturer { get; private set; }
-        public string Url { get; private set; }
-        public bool IsActive { get; private set; }
+        ValidateDomain(description, manufacturer, url, isActive);
+    }
 
-        public string UserId { get; private set; }
-        public User User { get; private set; }
+    [JsonConstructor]
+    public Device(int id, string description, string manufacturer, string url, bool? isActive)
+    {
+        DomainValidation.When(id < 0, "Invalid Id value");
+        Id = id;
+        ValidateDomain(description, manufacturer, url, isActive);
+    }
 
-        public ICollection<CommandDescription> CommandDescriptions { get; private set; }
+    public void Update(string description, string manufacturer, string url, bool? isActive)
+    {
+        ValidateDomain(description, manufacturer, url, isActive);
+    }
 
-        protected Device() { }
+    private void ValidateDomain(string description, string manufacturer, string url, bool? isActive)
+    {
+        DomainValidation.When(string.IsNullOrEmpty(description), "Invalid description. Required");
+        DomainValidation.When(string.IsNullOrEmpty(manufacturer), "Invalid manufacturer. Required");
+        DomainValidation.When(string.IsNullOrEmpty(url), "Invalid url. Required");
 
-        public Device(string description, string manufacturer, string url, bool isActive, string userId)
-        {
-            SetDescription(description);
-            SetManufacturer(manufacturer);
-            SetUrl(url);
-            SetIsActive(isActive);
-            SetUser(userId);
-        }
-
-        public void SetDescription(string description)
-        {
-            if (string.IsNullOrWhiteSpace(description)) throw new ArgumentException("Description is required");
-            Description = description;
-        }
-
-        public void SetManufacturer(string manufacturer)
-        {
-            Manufacturer = manufacturer;
-        }
-
-        public void SetUrl(string url)
-        {
-            if (string.IsNullOrWhiteSpace(url)) throw new ArgumentException("URL is required");
-            Url = url;
-        }
-
-        public void SetIsActive(bool isActive)
-        {
-            IsActive = isActive;
-        }
-
-        public void SetUser(string userId)
-        {
-            if (string.IsNullOrWhiteSpace(userId)) throw new ArgumentException("UserId is required");
-            UserId = userId;
-        }
+        Description = description;
+        Manufacturer = manufacturer; 
+        Url = url;
+        IsActive = isActive.HasValue;
     }
 }

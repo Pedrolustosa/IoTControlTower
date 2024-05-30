@@ -1,4 +1,4 @@
-﻿using IoTControlTower.Application.DTO;
+﻿using IoTControlTower.Application.DTO.Users;
 
 namespace IoTControlTower.Application.Interface
 {

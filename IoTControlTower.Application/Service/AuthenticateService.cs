@@ -4,12 +4,11 @@ using System.Security.Claims;
 using Microsoft.Extensions.Logging;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
-using IoTControlTower.Application.DTO;
 using System.IdentityModel.Tokens.Jwt;
 using IoTControlTower.Domain.Entities;
 using Microsoft.Extensions.Configuration;
-using IoTControlTower.Application.DTO.User;
 using IoTControlTower.Application.Interface;
+using IoTControlTower.Application.DTO.Users;
 
 namespace IoTControlTower.Application.Service
 {

@@ -1,39 +1,28 @@
-﻿using AutoMapper;
-using FluentValidation;
-using IoTControlTower.Domain.Entities;
-using IoTControlTower.Application.DTO;
-using IoTControlTower.Domain.Interface;
+﻿using MediatR;
+using AutoMapper;
+using Microsoft.Extensions.Logging;
 using IoTControlTower.Application.Interface;
 using IoTControlTower.Application.DTO.Device;
+using IoTControlTower.Application.Devices.Queries;
+using IoTControlTower.Application.Devices.Commands;
 
 namespace IoTControlTower.Application.Service
 {
-    public class DeviceService(IDevicesRepository devicesRepository, IMapper mapper, IValidator<DeviceDTO> validator) : IDeviceService
+    public class DeviceService(IMapper mapper, IMediator mediator, ILogger<DeviceService> logger) : IDeviceService
     {
         private readonly IMapper _mapper = mapper;
-        private readonly IValidator<DeviceDTO> _validator = validator;
-        private readonly IDevicesRepository _deviceRepository = devicesRepository;
+        private readonly IMediator _mediator = mediator;
+        private readonly ILogger<DeviceService> _logger = logger;
 
         public async Task<IEnumerable<DeviceDTO>> GetDevices()
         {
             try
             {
-                var devices = await _deviceRepository.GetAllAsync();
-                return _mapper.Map<IEnumerable<DeviceDTO>>(devices);
-            }
-            catch (Exception)
-            {
-
-                throw;
-            }
-        }
-
-        public async Task<DeviceDTO> GetDeviceById(int id)
-        {
-            try
-            {
-                var device = await _deviceRepository.GetByIdAsync(id);
-                return _mapper.Map<DeviceDTO>(device);
+                _logger.LogInformation("GetDevices");
+                var devicesQuery = new GetDevicesQuery();
+                if (devicesQuery is null) throw new ArgumentNullException(nameof(devicesQuery));
+                var result = await _mediator.Send(devicesQuery);
+                return _mapper.Map<IEnumerable<DeviceDTO>>(result);
             }
             catch (Exception)
             {
@@ -41,20 +30,15 @@ namespace IoTControlTower.Application.Service
             }
         }
 
-        public async Task<DeviceDTO> CreateDevice(DeviceDTO deviceDto)
+        public async Task<DeviceDTO> GetDeviceById(int? id)
         {
             try
             {
-                var validationResult = await _validator.ValidateAsync(deviceDto);
-                if (!validationResult.IsValid)
-                {
-                    var errors = validationResult.Errors.Select(error => error.ErrorMessage);
-                    throw new ArgumentException(string.Join(Environment.NewLine, errors));
-                }
-
-                var device = _mapper.Map<Device>(deviceDto);
-                await _deviceRepository.AddAsync(device);
-                return _mapper.Map<DeviceDTO>(device);
+                _logger.LogInformation("GetDeviceById");
+                var devicesByIdQuery = new GetDeviceByIdQuery { Id = id.Value };
+                if(devicesByIdQuery is null) throw new Exception(nameof(devicesByIdQuery));
+                var result = await _mediator.Send(devicesByIdQuery);
+                return _mapper.Map<DeviceDTO>(result);
             }
             catch (Exception)
             {
@@ -62,47 +46,44 @@ namespace IoTControlTower.Application.Service
             }
         }
 
-        public async Task<bool> UpdateDevice(DeviceUpdateDTO deviceUpdateDto)
+        public async Task<DeviceCreateDTO> CreateDevice(DeviceCreateDTO deviceDto)
         {
             try
             {
-                var validationResult = await _validator.ValidateAsync(deviceUpdateDto);
-                if (!validationResult.IsValid)
-                {
-                    var errors = validationResult.Errors.Select(error => error.ErrorMessage);
-                    throw new ArgumentException(string.Join(Environment.NewLine, errors));
-                }
+                _logger.LogInformation("CreateDevice");
+                var createDeviceCommand = _mapper.Map<CreateDeviceCommand>(deviceDto);
+                await _mediator.Send(createDeviceCommand);
+                return _mapper.Map<DeviceCreateDTO>(createDeviceCommand);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
 
-                var device = await _deviceRepository.GetByIdAsync(deviceUpdateDto.Id) ?? throw new ArgumentException($"Device with ID {deviceUpdateDto.Id} not found");
-                _mapper.Map(deviceUpdateDto, device);
-                await _deviceRepository.UpdateAsync(device);
+        public async Task<DeviceUpdateDTO> UpdateDevice(DeviceUpdateDTO deviceUpdateDto)
+        {
+            try
+            {
+                _logger.LogInformation("UpdateDevice");
+                var updateDeviceCommand = _mapper.Map<UpdateDeviceCommand>(deviceUpdateDto);
+                await _mediator.Send(updateDeviceCommand);
+                return _mapper.Map<DeviceUpdateDTO>(updateDeviceCommand);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        public async Task<bool> DeleteDevice(int? id)
+        {
+            try
+            {
+                _logger.LogInformation("DeleteDevice");
+                var deleteDeviceCommand = new DeleteDeviceCommand { Id = id.Value };
+                await _mediator.Send(deleteDeviceCommand);
                 return true;
-            }
-            catch (Exception)
-            {
-                throw;
-            }
-        }
-
-        public async Task<bool> DeleteDevice(int id)
-        {
-            try
-            {
-                var device = await _deviceRepository.GetByIdAsync(id) ?? throw new ArgumentException($"Device with ID {id} not found");
-                await _deviceRepository.DeleteAsync(device);
-                return true;
-            }
-            catch (Exception)
-            {
-                throw;
-            }
-        }
-
-        public async Task<DashboardSummaryDTO> GetDashboardSummary()
-        {
-            try
-            {
-                return new DashboardSummaryDTO();
             }
             catch (Exception)
             {

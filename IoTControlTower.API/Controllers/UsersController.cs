@@ -3,7 +3,7 @@ using IoTControlTower.API.Models;
 using Microsoft.AspNetCore.Identity;
 using IoTControlTower.Domain.Entities;
 using Microsoft.AspNetCore.Authorization;
-using IoTControlTower.Application.DTO.User;
+using IoTControlTower.Application.DTO.Users;
 using IoTControlTower.Application.Interface;
 
 namespace IoTControlTower.API.Controllers
@@ -20,32 +20,14 @@ namespace IoTControlTower.API.Controllers
 
         [HttpPost("RegisterUser")]
         [AllowAnonymous]
-        public async Task<ActionResult<UserToken>> CreateUser([FromBody] UserRegisterDTO userRegisterDTO, string role)
+        public async Task<ActionResult<UserToken>> CreateUser([FromBody] UserRegisterDTO userRegisterDTO)
         {
-            _logger.LogInformation("CreateUser() - Registering a new user with email: {Email} and role: {Role}", userRegisterDTO.Email, role);
-
+            _logger.LogInformation("CreateUser() - Registering a new user with email: {Email} and role: {Role}", userRegisterDTO.Email, userRegisterDTO.Role);
             try
             {
-                if (!ModelState.IsValid)
-                {
-                    _logger.LogWarning("CreateUser() - Model state is invalid for user registration.");
-                    return BadRequest(ModelState);
-                }
-
-                var urlHelper = Url;
-                var scheme = Request.Scheme;
-                var result = await _userService.CreateUser(userRegisterDTO, role, urlHelper, scheme);
-                if (result)
-                {
-                    _logger.LogInformation("CreateUser() - User {Email} was created successfully.", userRegisterDTO.Email);
-                    return Ok($"User {userRegisterDTO.Email} was created with success!");
-                }
-                else
-                {
-                    _logger.LogWarning("CreateUser() - Error creating user {Email}.", userRegisterDTO.Email);
-                    ModelState.AddModelError(string.Empty, "Error creating user.");
-                    return BadRequest(ModelState);
-                }
+                var createdUser = await _userService.CreateUser(userRegisterDTO);
+                _logger.LogInformation("CreateUser() - User {Email} was created successfully.", userRegisterDTO.Email);
+                return Ok(createdUser);
             }
             catch (Exception ex)
             {
