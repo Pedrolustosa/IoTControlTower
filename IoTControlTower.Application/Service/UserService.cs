@@ -4,8 +4,8 @@ using Microsoft.Extensions.Logging;
 using IoTControlTower.Domain.Entities;
 using IoTControlTower.Application.Interface;
 using IoTControlTower.Application.DTO.Users;
-using IoTControlTower.Application.Users.Queries;
-using IoTControlTower.Application.Users.Commands;
+using IoTControlTower.Application.CQRS.Users.Queries;
+using IoTControlTower.Application.CQRS.Users.Commands;
 using IoTControlTower.Domain.Interface.UserRepository;
 
 namespace IoTControlTower.Application.Service;

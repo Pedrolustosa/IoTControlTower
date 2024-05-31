@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc.Routing;
 using IoTControlTower.Application.DTO.Email;
 using IoTControlTower.Application.Interface;
 
-namespace IoTControlTower.Application.Users.Commands.Notifications;
+namespace IoTControlTower.Application.CQRS.Users.Notifications;
 
 public class UserCreatedEmailNotification(ILogger<UserCreatedEmailNotification> logger,
                                           UserManager<User> userManager,

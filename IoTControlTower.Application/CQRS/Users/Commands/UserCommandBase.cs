@@ -1,7 +1,7 @@
 ﻿using MediatR;
 using IoTControlTower.Domain.Entities;
 
-namespace IoTControlTower.Application.Users.Commands;
+namespace IoTControlTower.Application.CQRS.Users.Commands;
 
 public abstract class UserCommandBase : IRequest<User>
 {

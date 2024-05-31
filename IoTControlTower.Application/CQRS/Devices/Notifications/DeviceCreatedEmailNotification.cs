@@ -1,7 +1,7 @@
 ﻿using MediatR;
 using Microsoft.Extensions.Logging;
 
-namespace IoTControlTower.Application.Devices.Commands.Notifications
+namespace IoTControlTower.Application.CQRS.Devices.Notifications
 {
     public class DeviceCreatedEmailNotification(ILogger<DeviceCreatedEmailNotification> logger) : INotificationHandler<DeviceCreatedNotification>
     {
@@ -9,7 +9,7 @@ namespace IoTControlTower.Application.Devices.Commands.Notifications
 
         public Task Handle(DeviceCreatedNotification notification, CancellationToken cancellationToken)
         {
-            _logger.LogInformation($"Confirmation email ent for: { notification.Device.Id}");
+            _logger.LogInformation($"Confirmation email ent for: {notification.Device.Id}");
             return Task.CompletedTask;
         }
     }

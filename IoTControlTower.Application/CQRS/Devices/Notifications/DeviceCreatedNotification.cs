@@ -1,7 +1,7 @@
 ﻿using MediatR;
 using IoTControlTower.Domain.Entities;
 
-namespace IoTControlTower.Application.Devices.Commands.Notifications;
+namespace IoTControlTower.Application.CQRS.Devices.Notifications;
 
 public class DeviceCreatedNotification(Device device) : INotification
 {

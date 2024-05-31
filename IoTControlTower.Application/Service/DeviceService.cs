@@ -3,8 +3,8 @@ using AutoMapper;
 using Microsoft.Extensions.Logging;
 using IoTControlTower.Application.Interface;
 using IoTControlTower.Application.DTO.Device;
-using IoTControlTower.Application.Devices.Queries;
-using IoTControlTower.Application.Devices.Commands;
+using IoTControlTower.Application.CQRS.Devices.Queries;
+using IoTControlTower.Application.CQRS.Devices.Commands;
 
 namespace IoTControlTower.Application.Service
 {
@@ -19,7 +19,9 @@ namespace IoTControlTower.Application.Service
             try
             {
                 _logger.LogInformation("GetDevices() - Retrieving devices");
+
                 var devicesQuery = new GetDevicesQuery();
+
                 if (devicesQuery is null)
                 {
                     _logger.LogWarning("GetDevices() - Device query is null");
@@ -27,6 +29,7 @@ namespace IoTControlTower.Application.Service
                 }
 
                 var result = await _mediator.Send(devicesQuery);
+
                 if (result is null)
                 {
                     _logger.LogWarning("GetDevices() - No devices found");
@@ -49,10 +52,18 @@ namespace IoTControlTower.Application.Service
         {
             try
             {
-                _logger.LogInformation("GetDeviceById");
+                _logger.LogInformation("GetDeviceById()");
+
                 var devicesByIdQuery = new GetDeviceByIdQuery { Id = id.Value };
-                if(devicesByIdQuery is null) throw new Exception(nameof(devicesByIdQuery));
+
+                if (devicesByIdQuery is null)
+                {
+                    _logger.LogWarning("GetDeviceById() - Device by ID query is null");
+                    throw new ArgumentNullException(nameof(devicesByIdQuery), "Query object cannot be null.");
+                }
+
                 var result = await _mediator.Send(devicesByIdQuery);
+
                 return _mapper.Map<DeviceDTO>(result);
             }
             catch (Exception)
@@ -65,9 +76,12 @@ namespace IoTControlTower.Application.Service
         {
             try
             {
-                _logger.LogInformation("CreateDevice");
+                _logger.LogInformation("CreateDevice()");
+
                 var createDeviceCommand = _mapper.Map<CreateDeviceCommand>(deviceDto);
+
                 await _mediator.Send(createDeviceCommand);
+
                 return _mapper.Map<DeviceCreateDTO>(createDeviceCommand);
             }
             catch (Exception)
@@ -80,9 +94,12 @@ namespace IoTControlTower.Application.Service
         {
             try
             {
-                _logger.LogInformation("UpdateDevice");
+                _logger.LogInformation("UpdateDevice()");
+
                 var updateDeviceCommand = _mapper.Map<UpdateDeviceCommand>(deviceUpdateDto);
+
                 await _mediator.Send(updateDeviceCommand);
+
                 return _mapper.Map<DeviceUpdateDTO>(updateDeviceCommand);
             }
             catch (Exception)
@@ -95,9 +112,12 @@ namespace IoTControlTower.Application.Service
         {
             try
             {
-                _logger.LogInformation("DeleteDevice");
+                _logger.LogInformation("DeleteDevice()");
+
                 var deleteDeviceCommand = new DeleteDeviceCommand { Id = id.Value };
+
                 await _mediator.Send(deleteDeviceCommand);
+
                 return true;
             }
             catch (Exception)

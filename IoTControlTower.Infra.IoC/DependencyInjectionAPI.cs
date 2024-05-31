@@ -17,11 +17,11 @@ using IoTControlTower.Application.Validator;
 using IoTControlTower.Application.Interface;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.Extensions.DependencyInjection;
-using IoTControlTower.Application.Users.Commands;
-using IoTControlTower.Application.Devices.Commands;
+using IoTControlTower.Application.CQRS.Users.Commands;
 using IoTControlTower.Domain.Interface.UserRepository;
 using IoTControlTower.Infra.Repository.UserRepository;
 using IoTControlTower.Infra.Repository.DeviceRepository;
+using IoTControlTower.Application.CQRS.Devices.Commands;
 
 namespace IoTControlTower.Infra.IoC;
 
@@ -33,7 +33,6 @@ public static class DependencyInjectionAPI
         var sqlServerConnection = configuration.GetConnectionString("DefaultConnection");
         services.AddDbContext<IoTControlTowerContext>(options => options.UseSqlServer(configuration.GetConnectionString("DefaultConnection"),
         b => b.MigrationsAssembly(typeof(IoTControlTowerContext).Assembly.FullName)));
-
         services.AddSingleton<IDbConnection>(provider =>
         {
             var connection = new SqlConnection(sqlServerConnection);
@@ -54,7 +53,8 @@ public static class DependencyInjectionAPI
         services.AddTransient<IValidator<CreateDeviceCommand>, CreateDeviceCommandValidator>();
 
         // Mappings
-        services.AddAutoMapper(typeof(DomainToDTOProfile));
+        services.AddAutoMapper(typeof(UserProfile));
+        services.AddAutoMapper(typeof(DeviceProfile));
 
         // Repositories
         services.AddScoped<IUnitOfWork, UnitOfWork>();

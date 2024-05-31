@@ -1,5 +1,5 @@
 ﻿using FluentValidation;
-using IoTControlTower.Application.Users.Commands;
+using IoTControlTower.Application.CQRS.Users.Commands;
 
 namespace IoTControlTower.Application.Validator;
 
