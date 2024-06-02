@@ -8,7 +8,6 @@ using Microsoft.AspNetCore.Identity;
 using IoTControlTower.Domain.Entities;
 using IoTControlTower.Infra.Repository;
 using Microsoft.AspNetCore.Mvc.Routing;
-using IoTControlTower.Domain.Validation;
 using Microsoft.Extensions.Configuration;
 using IoTControlTower.Application.Mapping;
 using IoTControlTower.Application.Service;
@@ -17,6 +16,7 @@ using IoTControlTower.Application.Validator;
 using IoTControlTower.Application.Interface;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.Extensions.DependencyInjection;
+using IoTControlTower.Domain.Interface.UnitOfWork;
 using IoTControlTower.Application.CQRS.Users.Commands;
 using IoTControlTower.Domain.Interface.UserRepository;
 using IoTControlTower.Infra.Repository.UserRepository;
@@ -50,6 +50,7 @@ public static class DependencyInjectionAPI
 
         // FluentValidator
         services.AddTransient<IValidator<CreateUserCommand>, CreateUserCommandValidator>();
+        services.AddTransient<IValidator<UpdateUserCommand>, UpdateUserCommandValidator>();
         services.AddTransient<IValidator<CreateDeviceCommand>, CreateDeviceCommandValidator>();
 
         // Mappings
@@ -82,6 +83,10 @@ public static class DependencyInjectionAPI
 
         var myhandlers = AppDomain.CurrentDomain.Load("IotControlTower.Application");
         services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblies(myhandlers));
+
+        services.AddControllersWithViews();
+        services.AddControllers();
+        services.AddRouting(options => { options.LowercaseUrls = true; });
         return services;
     }
 }

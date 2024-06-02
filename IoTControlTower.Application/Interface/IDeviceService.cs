@@ -7,8 +7,8 @@ namespace IoTControlTower.Application.Interface
         Task<DeviceDTO> GetDeviceById(int? id);
         Task<IEnumerable<DeviceDTO>> GetDevices();
 
-        Task<DeviceCreateDTO> CreateDevice(DeviceCreateDTO deviceDto);
-        Task<DeviceUpdateDTO> UpdateDevice(DeviceUpdateDTO deviceUpdateDTO);
-        Task<bool> DeleteDevice(int? id);
+        Task CreateDevice(DeviceDTO deviceDto);
+        Task UpdateDevice(DeviceDTO deviceUpdateDTO);
+        Task DeleteDevice(int? id);
     }
 }

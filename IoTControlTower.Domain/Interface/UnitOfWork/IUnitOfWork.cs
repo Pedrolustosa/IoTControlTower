@@ -1,6 +1,6 @@
 ﻿using IoTControlTower.Domain.Interface.UserRepository;
 
-namespace IoTControlTower.Domain.Validation;
+namespace IoTControlTower.Domain.Interface.UnitOfWork;
 
 public interface IUnitOfWork
 {

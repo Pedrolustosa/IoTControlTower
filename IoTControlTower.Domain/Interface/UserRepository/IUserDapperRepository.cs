@@ -2,5 +2,5 @@
 
 public interface IUserDapperRepository
 {
-    Task<User> GetDeviceById(Guid id);
+    Task<User> GetUserByEmail(string email);
 }

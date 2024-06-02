@@ -2,87 +2,108 @@
 using Microsoft.AspNetCore.Authorization;
 using IoTControlTower.Application.Interface;
 using IoTControlTower.Application.DTO.Device;
+using System.Security.Claims;
 
 namespace IoTControlTower.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
     [AllowAnonymous]
-    public class DevicesController(ILogger<DevicesController> logger, IDeviceService deviceService) : ControllerBase
+    public class DevicesController(ILogger<DevicesController> logger, 
+                                   IDeviceService deviceService) : ControllerBase
     {
-        private readonly IDeviceService _deviceService = deviceService;
         private readonly ILogger<DevicesController> _logger = logger;
+        private readonly IDeviceService _deviceService = deviceService;
 
         [HttpGet("GetDevices")]
         [Authorize(Roles = "Admin,User")]
         public async Task<IActionResult> GetDevices()
         {
-            _logger.LogInformation("Executing GetDevices()");
-
+            _logger.LogInformation("GetDevices action called");
             try
             {
                 var devices = await _deviceService.GetDevices();
+                _logger.LogInformation("GetDevices action succeeded");
                 return Ok(devices);
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error occurred while retrieving devices.");
+                _logger.LogError(ex, "Error occurred while getting devices");
                 return StatusCode(StatusCodes.Status500InternalServerError, "Internal server error");
             }
         }
 
-        [HttpGet("GetDevice")]
+        [HttpGet("GetDevice/{id}")]
         [Authorize(Roles = "Admin,User")]
         public async Task<IActionResult> GetDevice(int id)
         {
-            _logger.LogInformation("Executing GetDeviceById({Id})", id);
-
+            _logger.LogInformation("GetDevice action called with id: {Id}", id);
             try
             {
                 var device = await _deviceService.GetDeviceById(id);
-                _logger.LogInformation("Successfully retrieved device with ID {Id}.", id);
-                return device != null ? Ok(device) : NotFound("Device not found");
+                if (device is not null)
+                {
+                    _logger.LogInformation("Device found with id: {Id}", id);
+                    return Ok(device);
+                }
+                else
+                {
+                    _logger.LogWarning("Device not found with id: {Id}", id);
+                    return NotFound("Device not found");
+                }
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error occurred while retrieving device with ID {Id}.", id);
+                _logger.LogError(ex, "Error occurred while getting device with id: {Id}", id);
                 return StatusCode(StatusCodes.Status500InternalServerError, "Internal server error");
             }
         }
 
         [HttpPost("CreateDevice")]
         [Authorize(Roles = "Admin,User")]
-        public async Task<IActionResult> CreateDevice([FromBody] DeviceCreateDTO deviceCreateDTO)
+        public async Task<IActionResult> CreateDevice([FromBody] DeviceDTO deviceDTO)
         {
-            _logger.LogInformation("Executing CreateDevice()");
-
+            _logger.LogInformation("CreateDevice action called");
             try
             {
-                var createdDevice = await _deviceService.CreateDevice(deviceCreateDTO);
-                _logger.LogInformation("Successfully created device with ID {Id} for user {UserId}.", createdDevice);
-                return Ok(createdDevice);
+                deviceDTO.Email = User.Claims.FirstOrDefault().Value;
+                await _deviceService.CreateDevice(deviceDTO);
+                _logger.LogInformation("Device created successfully");
+                return Ok(deviceDTO);
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error occurred while creating device.");
+                _logger.LogError(ex, "Error occurred while creating device");
                 return StatusCode(StatusCodes.Status500InternalServerError, "Internal server error");
             }
         }
 
         [HttpPut("UpdateDevice/{id}")]
         [Authorize(Roles = "Admin,User")]
-        public async Task<IActionResult> UpdateDevice(DeviceUpdateDTO deviceUpdateDTO)
+        public async Task<IActionResult> UpdateDevice(int id, [FromBody] DeviceDTO deviceDTO)
         {
-            _logger.LogInformation("Executing UpdateDevice({Id})", deviceUpdateDTO.Id);
+            _logger.LogInformation("UpdateDevice action called with id: {Id}", id);
             try
             {
-                var updatedDevice = await _deviceService.UpdateDevice(deviceUpdateDTO);
-                _logger.LogInformation("Successfully updated device with ID {Id}.", updatedDevice.Id);
-                return updatedDevice != null ? Ok(updatedDevice) : NotFound("Device not found");
+                if (id != deviceDTO.Id)
+                {
+                    _logger.LogWarning("Device ID in the URL does not match the device ID in the body");
+                    return BadRequest("Device ID mismatch");
+                }
+
+                if (deviceDTO is null)
+                {
+                    _logger.LogWarning("Device data is null");
+                    return BadRequest("Invalid device data");
+                }
+                deviceDTO.Email = User.Claims.FirstOrDefault().Value;
+                await _deviceService.UpdateDevice(deviceDTO);
+                _logger.LogInformation("Device updated successfully with id: {Id}", id);
+                return Ok(deviceDTO);
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error occurred while updating device with ID {Id}.", deviceUpdateDTO.Id);
+                _logger.LogError(ex, "Error occurred while updating device with id: {Id}", id);
                 return StatusCode(StatusCodes.Status500InternalServerError, "Internal server error");
             }
         }
@@ -91,17 +112,24 @@ namespace IoTControlTower.API.Controllers
         [Authorize(Roles = "Admin,User")]
         public async Task<IActionResult> DeleteDevice(int id)
         {
-            _logger.LogInformation("Executing DeleteDevice({Id})", id);
-
+            _logger.LogInformation("DeleteDevice action called with id: {Id}", id);
             try
             {
-                var deletedDevice = await _deviceService.DeleteDevice(id);
-                return deletedDevice == false ? NotFound("Device not found") : Ok(deletedDevice);
+                var device = await _deviceService.GetDeviceById(id);
+                if (device is null)
+                {
+                    _logger.LogWarning("Device not found with id: {Id}", id);
+                    return NotFound("Device not found");
+                }
+
+                await _deviceService.DeleteDevice(id);
+                _logger.LogInformation("Device deleted successfully with id: {Id}", id);
+                return Ok();
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, $"Error occurred while deleting device with Id {id}.");
-                return StatusCode(StatusCodes.Status500InternalServerError, $"Internal server error {id}");
+                _logger.LogError(ex, "Error occurred while deleting device with id: {Id}", id);
+                return StatusCode(StatusCodes.Status500InternalServerError, "Internal server error");
             }
         }
     }

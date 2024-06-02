@@ -8,120 +8,138 @@ using IoTControlTower.Application.CQRS.Devices.Commands;
 
 namespace IoTControlTower.Application.Service
 {
-    public class DeviceService(IMapper mapper, IMediator mediator, ILogger<DeviceService> logger) : IDeviceService
+    public class DeviceService(IMapper mapper, 
+                               IMediator mediator, 
+                               ILogger<DeviceService> logger) : IDeviceService
     {
-        private readonly IMapper _mapper = mapper;
-        private readonly IMediator _mediator = mediator;
-        private readonly ILogger<DeviceService> _logger = logger;
+        private readonly IMapper _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
+        private readonly IMediator _mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
+        private readonly ILogger<DeviceService> _logger = logger ?? throw new ArgumentNullException(nameof(logger));
 
         public async Task<IEnumerable<DeviceDTO>> GetDevices()
         {
+            _logger.LogInformation("GetDevices method called");
+
             try
             {
-                _logger.LogInformation("GetDevices() - Retrieving devices");
-
                 var devicesQuery = new GetDevicesQuery();
-
-                if (devicesQuery is null)
-                {
-                    _logger.LogWarning("GetDevices() - Device query is null");
-                    throw new ArgumentNullException(nameof(devicesQuery), "Query object cannot be null.");
-                }
-
                 var result = await _mediator.Send(devicesQuery);
 
                 if (result is null)
                 {
-                    _logger.LogWarning("GetDevices() - No devices found");
+                    _logger.LogWarning("No devices found");
                     return Enumerable.Empty<DeviceDTO>();
                 }
 
                 var deviceDTOs = _mapper.Map<List<DeviceDTO>>(result);
-                _logger.LogInformation("GetDevices() - Devices retrieved successfully");
+                _logger.LogInformation("GetDevices method succeeded");
                 return deviceDTOs;
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "GetDevices() - Error retrieving devices");
+                _logger.LogError(ex, "Error occurred while getting devices");
                 throw;
             }
         }
 
-
-        public async Task<DeviceDTO> GetDeviceById(int? id)
+        public async Task<DeviceDTO?> GetDeviceById(int? id)
         {
+            if (!id.HasValue)
+            {
+                _logger.LogWarning("GetDeviceById method called with null id");
+                throw new ArgumentNullException(nameof(id), "ID cannot be null");
+            }
+
+            _logger.LogInformation("GetDeviceById method called with id: {Id}", id);
+
             try
             {
-                _logger.LogInformation("GetDeviceById()");
 
                 var devicesByIdQuery = new GetDeviceByIdQuery { Id = id.Value };
-
-                if (devicesByIdQuery is null)
-                {
-                    _logger.LogWarning("GetDeviceById() - Device by ID query is null");
-                    throw new ArgumentNullException(nameof(devicesByIdQuery), "Query object cannot be null.");
-                }
-
                 var result = await _mediator.Send(devicesByIdQuery);
 
-                return _mapper.Map<DeviceDTO>(result);
+                if (result is null)
+                {
+                    _logger.LogWarning("Device not found with id: {Id}", id);
+                    return null;
+                }
+
+                var deviceDTO = _mapper.Map<DeviceDTO>(result);
+                _logger.LogInformation("GetDeviceById method succeeded for id: {Id}", id);
+                return deviceDTO;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                _logger.LogError(ex, "Error occurred while getting device with id: {Id}", id);
                 throw;
             }
         }
 
-        public async Task<DeviceCreateDTO> CreateDevice(DeviceCreateDTO deviceDto)
+        public async Task CreateDevice(DeviceDTO deviceDto)
         {
+            if (deviceDto is null)
+            {
+                _logger.LogWarning("CreateDevice method called with null deviceDto");
+                throw new ArgumentNullException(nameof(deviceDto), "DeviceDTO cannot be null");
+            }
+
+            _logger.LogInformation("CreateDevice method called");
+
             try
             {
-                _logger.LogInformation("CreateDevice()");
-
                 var createDeviceCommand = _mapper.Map<CreateDeviceCommand>(deviceDto);
-
                 await _mediator.Send(createDeviceCommand);
-
-                return _mapper.Map<DeviceCreateDTO>(createDeviceCommand);
+                _logger.LogInformation("CreateDevice method succeeded");
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                _logger.LogError(ex, "Error occurred while creating device");
                 throw;
             }
         }
 
-        public async Task<DeviceUpdateDTO> UpdateDevice(DeviceUpdateDTO deviceUpdateDto)
+        public async Task UpdateDevice(DeviceDTO deviceDto)
         {
+            if (deviceDto is null)
+            {
+                _logger.LogWarning("UpdateDevice method called with null deviceUpdateDto");
+                throw new ArgumentNullException(nameof(deviceDto), "DeviceDTO cannot be null");
+            }
+
+            _logger.LogInformation("UpdateDevice method called for id: {Id}", deviceDto.Id);
+
             try
             {
-                _logger.LogInformation("UpdateDevice()");
-
-                var updateDeviceCommand = _mapper.Map<UpdateDeviceCommand>(deviceUpdateDto);
-
+                var updateDeviceCommand = _mapper.Map<UpdateDeviceCommand>(deviceDto);
                 await _mediator.Send(updateDeviceCommand);
-
-                return _mapper.Map<DeviceUpdateDTO>(updateDeviceCommand);
+                _logger.LogInformation("UpdateDevice method succeeded for id: {Id}", deviceDto.Id);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                _logger.LogError(ex, "Error occurred while updating device with id: {Id}", deviceDto.Id);
                 throw;
             }
         }
 
-        public async Task<bool> DeleteDevice(int? id)
+        public async Task DeleteDevice(int? id)
         {
+            if (!id.HasValue)
+            {
+                _logger.LogWarning("DeleteDevice method called with null id");
+                throw new ArgumentNullException(nameof(id), "ID cannot be null");
+            }
+
+            _logger.LogInformation("DeleteDevice method called for id: {Id}", id);
+
             try
             {
-                _logger.LogInformation("DeleteDevice()");
-
                 var deleteDeviceCommand = new DeleteDeviceCommand { Id = id.Value };
-
                 await _mediator.Send(deleteDeviceCommand);
-
-                return true;
+                _logger.LogInformation("DeleteDevice method succeeded for id: {Id}", id);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                _logger.LogError(ex, "Error occurred while deleting device with id: {Id}", id);
                 throw;
             }
         }

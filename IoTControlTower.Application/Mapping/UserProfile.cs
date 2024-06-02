@@ -10,13 +10,8 @@ namespace IoTControlTower.Application.Mapping
         public UserProfile()
         {
             CreateMap<User, UserDTO>().ReverseMap();
-            CreateMap<User, UserUpdateDTO>().ReverseMap();
-            CreateMap<User, AuthenticateDTO>().ReverseMap();
-            CreateMap<UserDTO, UserUpdateDTO>().ReverseMap();
-            CreateMap<UserDTO, AuthenticateDTO>().ReverseMap();
-            CreateMap<AuthenticateDTO, UserUpdateDTO>().ReverseMap();
-            CreateMap<UserRegisterDTO, CreateUserCommand>().ReverseMap();
-            CreateMap<UserUpdateDTO, UpdateUserCommand>().ReverseMap();
+            CreateMap<UserDTO, CreateUserCommand>().ReverseMap();
+            CreateMap<UserDTO, UpdateUserCommand>().ReverseMap();
         }
     }
 }

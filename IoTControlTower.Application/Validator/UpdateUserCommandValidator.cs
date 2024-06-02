@@ -1,12 +1,13 @@
 ﻿using FluentValidation;
+using IoTControlTower.Domain.Enum;
 using System.Text.RegularExpressions;
 using IoTControlTower.Application.CQRS.Users.Commands;
 
 namespace IoTControlTower.Application.Validator;
 
-public partial class CreateUserCommandValidator : AbstractValidator<CreateUserCommand>
+public partial class UpdateUserCommandValidator : AbstractValidator<UpdateUserCommand>
 {
-    public CreateUserCommandValidator()
+    public UpdateUserCommandValidator()
     {
         RuleFor(user => user.UserName)
             .NotEmpty().WithMessage("User name is required.");

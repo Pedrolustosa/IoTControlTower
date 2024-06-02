@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using IoTControlTower.Domain.Enum;
 using IoTControlTower.Domain.Entities;
 
 namespace IoTControlTower.Application.CQRS.Users.Commands;
@@ -11,7 +12,7 @@ public abstract class UserCommandBase : IRequest<User>
     public string? Email { get; set; }
     public string? PhoneNumber { get; set; }
     public DateTime? DateOfBirth { get; set; }
-    public string? Gender { get; set; }
+    public Gender Gender { get; set; }
 
     public string? Address { get; set; }
     public string? City { get; set; }

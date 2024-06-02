@@ -6,8 +6,8 @@ namespace IoTControlTower.Infra.EntityConfigurations.Users;
 
 public class UserConfiguration : IEntityTypeConfiguration<User>
 {
-    public void Configure(EntityTypeBuilder<User> builder)
+    public void Configure(EntityTypeBuilder<User> builder) 
     {
-        builder.HasKey(d => d.Id);
+        builder.Property(u => u.Id).HasColumnName("UserId");
     }
 }

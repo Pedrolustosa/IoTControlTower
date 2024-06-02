@@ -9,4 +9,5 @@ public abstract class DeviceCommandBase : IRequest<Device>
     public string? Manufacturer { get; set; }
     public string? Url { get; set; }
     public bool? IsActive { get; set; }
+    public string Email { get; set; }
 }

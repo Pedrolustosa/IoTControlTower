@@ -1,7 +1,6 @@
 ﻿using Dapper;
 using System.Data;
 using IoTControlTower.Domain.Entities;
-using IoTControlTower.Domain.Interface.UserRepository;
 
 namespace IoTControlTower.Infra.Repository.UserRepository;
 
@@ -9,12 +8,12 @@ public class UserDapperRepository(IDbConnection dbConnection) : IUserDapperRepos
 {
     private readonly IDbConnection _dbConnection = dbConnection;
 
-    public async Task<User> GetDeviceById(Guid id)
+    public async Task<User> GetUserByEmail(string email)
     {
         try
         {
-            string query = "SELECT * FROM Users WHERE Id = @id";
-            return await _dbConnection.QueryFirstOrDefaultAsync<User>(query, new { Id = id });
+            string query = "SELECT * FROM AspNetUsers WHERE Email = @email";
+            return await _dbConnection.QueryFirstOrDefaultAsync<User>(query, new { Email = email });
         }
         catch (Exception)
         {

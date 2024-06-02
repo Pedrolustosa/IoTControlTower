@@ -2,6 +2,6 @@
 
 public interface IDeviceDapperRepository
 {
-    Task<Device> GetDeviceById(int id);
-    Task<IEnumerable<Device>> GetDevices();
+    Task<Device> GetDeviceByIdAsync(int id);
+    Task<IEnumerable<Device>> GetDevicesAsync();
 }

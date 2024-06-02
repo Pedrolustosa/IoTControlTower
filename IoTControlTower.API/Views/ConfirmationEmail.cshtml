@@ -1,0 +1,95 @@
+﻿@{
+    ViewData["Title"] = "Email Confirmed";
+}
+
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Email Confirmed</title>
+        <!-- Bootstrap CSS -->
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+        <!-- Font Awesome -->
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+        <style>
+        body {
+            background-color: #f8f9fa;
+            color: #343a40;
+            font-family: Arial, sans-serif;
+        }
+
+        .wrapper {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+        }
+
+        .card {
+            border: none;
+            transition: all 500ms cubic-bezier(0.19, 1, 0.22, 1);
+            border-radius: 20px;
+            box-shadow: 0 0 12px 0 rgba(0, 0, 0, 0.2);
+            background: linear-gradient(135deg, #4caf50, #2196f3); /* Gradient background */
+            color: #fff;
+        }
+
+        .card-footer {
+            background: none;
+            border-top: none;
+        }
+
+        .card-title {
+            font-weight: 800;
+            color: #fff;
+        }
+
+        .card-meta {
+            color: #fff;
+            text-transform: uppercase;
+            font-weight: 500;
+            letter-spacing: 2px;
+        }
+
+        .card-body {
+            padding: 20px;
+        }
+        </style>
+    </head>
+    <body>
+    <section class="wrapper">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-8 offset-md-2 text-center">
+                    <h1 class="display-4 font-weight-bolder">Welcome!</h1>
+                    <p class="lead">Your email has been successfully confirmed.</p>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-8 offset-md-2">
+                    <div class="card border-dark">
+                        <div class="card-body">
+                            <h4 class="card-title mt-0 text-center">Welcome to our community!</h4>
+                            <p class="card-text text-center">Thank you for confirming your email. We're glad to have you with us!</p>
+                            <small class="card-meta d-block text-muted text-center">Confirmation Date: @DateTime.Now</small>
+                        </div>
+                        <div class="card-footer bg-transparent border-dark text-center">
+                            <div class="media">
+                                <div class="media-body">
+                                    <h6 class="my-0 text-dark">Support Team</h6>
+                                    <a href="https://github.com/Pedrolustosa" target="_blank" class="text-decoration-none">Pedro Lustosa</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+        <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    </body>
+</html>

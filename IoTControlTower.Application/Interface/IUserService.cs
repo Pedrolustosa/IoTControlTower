@@ -4,9 +4,7 @@ namespace IoTControlTower.Application.Interface;
 
 public interface IUserService
 {
-    Task<bool> GetUserName(string userName);
-    Task<AuthenticateDTO> GetUserData(AuthenticateDTO userDTO);
-    Task<UserDTO> GetUserById(Guid userDTO);
-    Task<UserRegisterDTO> CreateUser(UserRegisterDTO userRegisterDTO);
-    Task<UserUpdateDTO> UpdateUser(UserUpdateDTO userRegisterDTO);
+    Task<UserDTO> GetUserByEmail(string email);
+    Task<UserDTO> CreateUser(UserDTO userRegisterDTO);
+    Task<UserDTO> UpdateUser(UserDTO userRegisterDTO);
 }

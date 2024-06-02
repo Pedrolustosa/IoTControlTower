@@ -1,19 +1,22 @@
-﻿namespace IoTControlTower.Application.DTO.Users
-{
-    public class UserDTO
-    {
-        public string Email { get; set; }
-        public string UserName { get; set; }
-        public string Password { get; set; }
-        public string FullName { get; set; }
-        public DateTime? DateOfBirth { get; set; }
-        public string? Gender { get; set; }
-        public string PhoneNumber { get; set; }
+﻿using IoTControlTower.Domain.Enum;
 
-        public string? Address { get; set; }
-        public string? City { get; set; }
-        public string? State { get; set; }
-        public string? Country { get; set; }
-        public string? PostalCode { get; set; }
-    }
+namespace IoTControlTower.Application.DTO.Users;
+
+public record UserDTO
+{
+    public required string Email { get; set; }
+    public required string UserName { get; set; }
+    public required string Password { get; set; }
+    public required string FullName { get; set; }
+    public required DateTime? DateOfBirth { get; set; }
+    public required Gender Gender { get; set; }
+    public required string PhoneNumber { get; set; }
+
+    public required string? Address { get; set; }
+    public required string? City { get; set; }
+    public required string? State { get; set; }
+    public required string? Country { get; set; }
+    public required string? PostalCode { get; set; }
+
+    public required string? Role { get; set; }
 }

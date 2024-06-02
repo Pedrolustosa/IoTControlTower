@@ -3,7 +3,7 @@ using IoTControlTower.Domain.Entities;
 
 namespace IoTControlTower.Application.CQRS.Users.Queries;
 
-public class GetUserByIdQuery : IRequest<User>
+public class GetUserByEmailQuery : IRequest<User>
 {
-    public Guid Id { get; set; }
+    public string? Email { get; set; }
 }

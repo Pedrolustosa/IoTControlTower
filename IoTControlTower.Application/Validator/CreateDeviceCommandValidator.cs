@@ -10,5 +10,6 @@ public class CreateDeviceCommandValidator : AbstractValidator<CreateDeviceComman
         RuleFor(device => device.Description).NotEmpty().WithMessage("Description is required.");
         RuleFor(device => device.Manufacturer).NotEmpty().WithMessage("Manufacturer is required.");
         RuleFor(device => device.Url).NotEmpty().WithMessage("URL is required.");
+        RuleFor(device => device.Email).NotEmpty().WithMessage("User is required.");
     }
 }

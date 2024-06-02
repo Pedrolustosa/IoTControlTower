@@ -1,121 +1,83 @@
 ﻿using MediatR;
 using AutoMapper;
 using Microsoft.Extensions.Logging;
-using IoTControlTower.Domain.Entities;
 using IoTControlTower.Application.Interface;
 using IoTControlTower.Application.DTO.Users;
 using IoTControlTower.Application.CQRS.Users.Queries;
 using IoTControlTower.Application.CQRS.Users.Commands;
-using IoTControlTower.Domain.Interface.UserRepository;
 
 namespace IoTControlTower.Application.Service;
 
-public class UserService(IUserRepository userRepository,
-                         IMapper mapper,
+public class UserService(IMapper mapper,
                          IMediator mediator,
                          ILogger<UserService> logger) : IUserService
 {
     private readonly IMapper _mapper = mapper;
-    private readonly ILogger<UserService> _logger = logger;
-    private readonly IUserRepository _userRepository = userRepository;
     private readonly IMediator _mediator = mediator;
+    private readonly ILogger<UserService> _logger = logger;
 
-    public async Task<bool> GetUserName(string userName)
+    public async Task<UserDTO> GetUserByEmail(string email)
     {
+        _logger.LogInformation("GetUserByEmail() - Attempting to get user by email: {Email}", email);
         try
         {
-            _logger.LogInformation("GetUserName() - Checking if username exists: {UserName}", userName);
-            var exists = await _userRepository.GetUserName(userName);
-            _logger.LogInformation("GetUserName() - Username check result: {UserNameExists}", exists);
-            return exists;
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError(ex, "GetUserName() - Error checking username: {UserName}", userName);
-            throw;
-        }
-    }
-
-    public async Task<AuthenticateDTO> GetUserData(AuthenticateDTO authenticateDTO)
-    {
-        try
-        {
-            _logger.LogInformation("GetUserData() - Retrieving data for user: {UserName}", authenticateDTO.UserName);
-            var user = _mapper.Map<User>(authenticateDTO);
-            var dataUser = await _userRepository.GetUserData(user);
-            var userData = _mapper.Map<AuthenticateDTO>(dataUser);
-            _logger.LogInformation("GetUserData() - User data retrieved successfully for user: {UserName}", authenticateDTO.UserName);
-            return userData;
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError(ex, "GetUserData() - Error retrieving data for user: {UserName}", authenticateDTO.UserName);
-            throw;
-        }
-    }
-
-    public async Task<UserRegisterDTO> CreateUser(UserRegisterDTO userRegisterDTO)
-    {
-        try
-        {
-            _logger.LogInformation("CreateUser() - Creating user: {UserName}", userRegisterDTO.UserName);
-            var createUserCommand = _mapper.Map<CreateUserCommand>(userRegisterDTO);
-            await _mediator.Send(createUserCommand);
-            var createdUser = _mapper.Map<UserRegisterDTO>(createUserCommand);
-            _logger.LogInformation("CreateUser() - User created successfully: {UserName}", userRegisterDTO.UserName);
-            return createdUser;
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError(ex, "CreateUser() - Error creating user: {UserName}", userRegisterDTO.UserName);
-            throw;
-        }
-    }
-
-    public async Task<UserUpdateDTO> UpdateUser(UserUpdateDTO userUpdateDTO)
-    {
-        try
-        {
-            _logger.LogInformation("UpdateUser() - Updating user: {UserName}", userUpdateDTO.UserName);
-            var updateUserCommand = _mapper.Map<UpdateUserCommand>(userUpdateDTO);
-            var updatedUser = await _mediator.Send(updateUserCommand);
-            var updatedUserDTO = _mapper.Map<UserUpdateDTO>(updatedUser);
-            _logger.LogInformation("UpdateUser() - User updated successfully: {UserName}", userUpdateDTO.UserName);
-            return updatedUserDTO;
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError(ex, "UpdateUser() - Error updating user: {UserName}", userUpdateDTO.UserName);
-            throw;
-        }
-    }
-
-    public async Task<UserDTO> GetUserById(Guid userId)
-    {
-        try
-        {
-            _logger.LogInformation("GetUserById() - Retrieving user by ID: {UserId}", userId);
-            var userByIdQuery = new GetUserByIdQuery { Id = userId };
-            if (userByIdQuery is null)
+            var getUserByEmailQuery = new GetUserByEmailQuery { Email = email };
+            if (getUserByEmailQuery is null)
             {
-                _logger.LogWarning("GetUserById() - Query object is null for ID: {UserId}", userId);
-                throw new ArgumentNullException(nameof(userByIdQuery), "Query object cannot be null.");
+                _logger.LogError("GetUserByEmail() - Query object is null for email: {Email}", email);
+                throw new ArgumentNullException(nameof(getUserByEmailQuery), "Query object cannot be null.");
             }
 
-            var result = await _mediator.Send(userByIdQuery);
+            var result = await _mediator.Send(getUserByEmailQuery);
             if (result is null)
             {
-                _logger.LogWarning("GetUserById() - No user found with ID: {UserId}", userId);
+                _logger.LogWarning("GetUserByEmail() - User not found: {Email}", email);
                 throw new Exception("User not found.");
             }
 
             var userDTO = _mapper.Map<UserDTO>(result);
-            _logger.LogInformation("GetUserById() - User retrieved successfully by ID: {UserId}", userId);
+            _logger.LogInformation("GetUserByEmail() - User found and mapped to DTO: {Email}", email);
             return userDTO;
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "GetUserById() - Error retrieving user by ID: {UserId}", userId);
+            _logger.LogError(ex, "GetUserByEmail() - Error occurred while getting user by email: {Email}", email);
+            throw;
+        }
+    }
+
+    public async Task<UserDTO> CreateUser(UserDTO userRegisterDTO)
+    {
+        _logger.LogInformation("CreateUser() - Attempting to create user: {Email}", userRegisterDTO.Email);
+        try
+        {
+            var createUserCommand = _mapper.Map<CreateUserCommand>(userRegisterDTO);
+            await _mediator.Send(createUserCommand);
+            var createdUser = _mapper.Map<UserDTO>(createUserCommand);
+            _logger.LogInformation("CreateUser() - User created successfully: {Email}", createdUser.Email);
+            return createdUser;
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "CreateUser() - Error occurred while creating user: {Email}", userRegisterDTO.Email);
+            throw;
+        }
+    }
+
+    public async Task<UserDTO> UpdateUser(UserDTO userUpdateDTO)
+    {
+        _logger.LogInformation("UpdateUser() - Attempting to update user: {Email}", userUpdateDTO.Email);
+        try
+        {
+            var updateUserCommand = _mapper.Map<UpdateUserCommand>(userUpdateDTO);
+            await _mediator.Send(updateUserCommand);
+            var updatedUser = _mapper.Map<UserDTO>(updateUserCommand);
+            _logger.LogInformation("UpdateUser() - User updated successfully: {Email}", updatedUser.Email);
+            return updatedUser;
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "UpdateUser() - Error occurred while updating user: {Email}", userUpdateDTO.Email);
             throw;
         }
     }

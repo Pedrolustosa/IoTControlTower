@@ -10,8 +10,8 @@ namespace IoTControlTower.Application.Mapping
         public DeviceProfile()
         {
             CreateMap<Device, DeviceDTO>().ReverseMap();
-            CreateMap<DeviceCreateDTO, CreateDeviceCommand>().ReverseMap();
-            CreateMap<DeviceUpdateDTO, UpdateDeviceCommand>().ReverseMap();
+            CreateMap<DeviceDTO, CreateDeviceCommand>().ReverseMap();
+            CreateMap<DeviceDTO, UpdateDeviceCommand>().ReverseMap();
         }
     }
 }
