@@ -29,9 +29,8 @@ namespace IoTControlTower.API.Controllers
                 }
                 else
                 {
-                    _logger.LogWarning("GenerateToken() - Invalid login attempt for user: {Email}", loginDTO.Email);
-                    ModelState.AddModelError(string.Empty, "Invalid login attempt.");
-                    return BadRequest(ModelState);
+                    _logger.LogWarning("Invalid login attempt for user: {Email}", loginDTO.Email);
+                    return BadRequest("Invalid login attempt.");
                 }
             }
             catch (Exception ex)

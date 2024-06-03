@@ -2,7 +2,6 @@
 using Microsoft.AspNetCore.Authorization;
 using IoTControlTower.Application.Interface;
 using IoTControlTower.Application.DTO.Device;
-using System.Security.Claims;
 
 namespace IoTControlTower.API.Controllers
 {
@@ -66,7 +65,7 @@ namespace IoTControlTower.API.Controllers
             _logger.LogInformation("CreateDevice action called");
             try
             {
-                deviceDTO.Email = User.Claims.FirstOrDefault().Value;
+                deviceDTO.Email = User?.Claims?.FirstOrDefault()?.Value ?? string.Empty;
                 await _deviceService.CreateDevice(deviceDTO);
                 _logger.LogInformation("Device created successfully");
                 return Ok(deviceDTO);
@@ -96,7 +95,6 @@ namespace IoTControlTower.API.Controllers
                     _logger.LogWarning("Device data is null");
                     return BadRequest("Invalid device data");
                 }
-                deviceDTO.Email = User.Claims.FirstOrDefault().Value;
                 await _deviceService.UpdateDevice(deviceDTO);
                 _logger.LogInformation("Device updated successfully with id: {Id}", id);
                 return Ok(deviceDTO);

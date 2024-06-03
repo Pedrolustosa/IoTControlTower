@@ -10,6 +10,7 @@ namespace IoTControlTower.Infra.IoC
     {
         public static IServiceCollection AddInfrastructureJWT(this IServiceCollection services, IConfiguration configuration)
         {
+            var key = Encoding.UTF8.GetBytes(configuration["Jwt:SecretKey"]);
             services.AddAuthentication(opt =>
             {
                 opt.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -25,7 +26,7 @@ namespace IoTControlTower.Infra.IoC
                     ValidateIssuerSigningKey = true,
                     ValidIssuer = configuration["Jwt:Issuer"],
                     ValidAudience = configuration["Jwt:Audience"],
-                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["Jwt:SecretKey"])),
+                    IssuerSigningKey = new SymmetricSecurityKey(key),
                     ClockSkew = TimeSpan.Zero
                 };
             });
