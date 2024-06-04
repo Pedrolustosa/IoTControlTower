@@ -5,7 +5,6 @@
 ![GitHub stars](https://img.shields.io/github/stars/Pedrolustosa/IoTControlTower?style=social)
 ![GitHub forks](https://img.shields.io/github/forks/Pedrolustosa/IoTControlTower?style=social)
 [![License](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
-![Project Views](https://komarev.com/ghpvc/?username=SeuUsuario&label=Project%20Views&color=brightgreen)
 
 This project is a decision-making aid application, using a control tower to visualize data from IoT devices in real-time. The application allows the registration and management of IoT devices through a collaborative platform.
 
