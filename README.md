@@ -54,8 +54,11 @@ To run the project locally, follow the instructions below:
 
 # Cloning the Repository
 1. Open the terminal or command prompt.
-2. Clone this repository to your local machine using the command: ``` git clone https://github.com/Pedrolustosa/IoTControlTower.git ```
-3. Navigate to the cloned directory: ``` cd IoTControlTower ```
+2. Clone this repository to your local machine using the command:
+3. ``` bash
+   git clone https://github.com/Pedrolustosa/IoTControlTower.git
+    ```
+4. Navigate to the cloned directory: ``` cd IoTControlTower ```
 
 # Running in Visual Studio 2022
 1. Open Visual Studio 2022.
