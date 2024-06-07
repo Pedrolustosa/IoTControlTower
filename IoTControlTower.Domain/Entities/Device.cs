@@ -16,31 +16,31 @@ public sealed class Device : Entity
     public string? FirmwareVersion { get; private set; }
 
     [ForeignKey("User")]
-    public string UserId { get; set; }
+    public string? UserId { get; private set; }
     [JsonIgnore]
-    public User User { get; set; }
+    public User? User { get; private set; }
 
     public Device() { }
 
-    public Device(string description, string manufacturer, string url, bool? isActive, string userId, DateTime? lastCommunication, string? ipAddress, string? location, string? firmwareVersion)
+    public Device(string description, string manufacturer, string url, bool? isActive, string? userId, DateTime? lastCommunication, string? ipAddress, string? location, string? firmwareVersion)
     {
         ValidateDomain(description, manufacturer, url, isActive.Value, userId, lastCommunication, ipAddress, location, firmwareVersion);
     }
 
     [JsonConstructor]
-    public Device(int id, string description, string manufacturer, string url, bool? isActive, string userId, DateTime? lastCommunication, string? ipAddress, string? location, string? firmwareVersion)
+    public Device(int id, string description, string manufacturer, string url, bool? isActive, string? userId, DateTime? lastCommunication, string? ipAddress, string? location, string? firmwareVersion)
     {
         DomainValidation.When(id < 0, "Invalid Id value");
         Id = id;
         ValidateDomain(description, manufacturer, url, isActive, userId, lastCommunication, ipAddress, location, firmwareVersion);
     }
 
-    public void Update(string description, string manufacturer, string url, bool? isActive, string userId, DateTime? lastCommunication, string? ipAddress, string? location, string? firmwareVersion)
+    public void Update(string description, string manufacturer, string url, bool? isActive, string? userId, DateTime? lastCommunication, string? ipAddress, string? location, string? firmwareVersion)
     {
         ValidateDomain(description, manufacturer, url, isActive, userId, lastCommunication, ipAddress, location, firmwareVersion);
     }
 
-    private void ValidateDomain(string description, string manufacturer, string url, bool? isActive, string userId, DateTime? lastCommunication, string? ipAddress, string? location, string? firmwareVersion)
+    private void ValidateDomain(string description, string manufacturer, string url, bool? isActive, string? userId, DateTime? lastCommunication, string? ipAddress, string? location, string? firmwareVersion)
     {
         DomainValidation.When(string.IsNullOrEmpty(description), "Invalid description. Required");
         DomainValidation.When(string.IsNullOrEmpty(manufacturer), "Invalid manufacturer. Required");

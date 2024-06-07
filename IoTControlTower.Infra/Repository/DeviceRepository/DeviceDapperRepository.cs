@@ -12,8 +12,9 @@ public class DeviceDapperRepository(IDbConnection dbConnection) : IDeviceDapperR
     {
         try
         {
-            string query = "SELECT * FROM Devices WHERE Id = @Id";
-            return await _dbConnection.QueryFirstOrDefaultAsync<Device>(query, new { Id = id });
+            string query = "SELECT DeviceId as Id, * FROM Devices WHERE DeviceId = @id";
+            var device = await _dbConnection.QueryFirstOrDefaultAsync<Device>(query, new { Id = id });
+            return device;
         }
         catch (Exception ex)
         {
@@ -31,7 +32,7 @@ public class DeviceDapperRepository(IDbConnection dbConnection) : IDeviceDapperR
     {
         try
         {
-            string query = "SELECT * FROM Devices";
+            string query = "SELECT DeviceId as Id, * FROM Devices";
             return await _dbConnection.QueryAsync<Device>(query);
         }
         catch (Exception ex)

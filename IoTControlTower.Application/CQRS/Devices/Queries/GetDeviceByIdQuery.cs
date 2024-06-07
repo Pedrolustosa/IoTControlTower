@@ -5,5 +5,5 @@ namespace IoTControlTower.Application.CQRS.Devices.Queries;
 
 public class GetDeviceByIdQuery : IRequest<Device>
 {
-    public int Id { get; set; }
+    public int DeviceId { get; set; }
 }

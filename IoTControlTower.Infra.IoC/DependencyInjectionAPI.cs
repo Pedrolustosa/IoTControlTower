@@ -22,6 +22,8 @@ using IoTControlTower.Domain.Interface.UserRepository;
 using IoTControlTower.Infra.Repository.UserRepository;
 using IoTControlTower.Infra.Repository.DeviceRepository;
 using IoTControlTower.Application.CQRS.Devices.Commands;
+using IoTControlTower.Domain.Interface.CachingRepository;
+using IoTControlTower.Infra.Repository.CachingRepository;
 
 namespace IoTControlTower.Infra.IoC;
 
@@ -66,6 +68,13 @@ public static class DependencyInjectionAPI
 
         // Registro do UnitOfWork
         services.AddScoped<UnitOfWork>();
+
+        // Cache - Redis
+        services.AddScoped<ICachingRepository, CachingRepository>();
+        services.AddStackExchangeRedisCache(r => {
+            r.InstanceName = "";
+            r.Configuration = "localhost:6379";
+        });
 
         // Serices
         services.AddScoped<IUserService, UserService>();

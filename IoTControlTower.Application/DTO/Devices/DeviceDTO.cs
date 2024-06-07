@@ -9,6 +9,10 @@ public record DeviceDTO
     public string? Manufacturer { get; set; }
     public string? Url { get; set; }
     public bool IsActive { get; set; }
+    public DateTime? LastCommunication { get; set; }
+    public string? IpAddress { get; set; }
+    public string? Location { get; set; }
+    public string? FirmwareVersion { get; set; }
 
     [JsonIgnore]
     public string? Email { get; set; }

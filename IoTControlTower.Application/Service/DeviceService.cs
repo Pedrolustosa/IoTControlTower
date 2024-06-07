@@ -55,7 +55,7 @@ namespace IoTControlTower.Application.Service
             try
             {
 
-                var devicesByIdQuery = new GetDeviceByIdQuery { Id = id.Value };
+                var devicesByIdQuery = new GetDeviceByIdQuery { DeviceId = id.Value };
                 var result = await _mediator.Send(devicesByIdQuery);
 
                 if (result is null)

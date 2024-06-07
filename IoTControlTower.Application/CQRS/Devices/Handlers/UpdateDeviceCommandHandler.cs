@@ -24,7 +24,7 @@ public class UpdateDeviceCommandHandler(UnitOfWork unitOfWork,
                 _logger.LogWarning("Device not found for ID: {Id}", request.Id);
                 throw new InvalidOperationException("Device not found");
             }
-            existingDevice.Update(request.Description, request.Manufacturer, request.Url, request.IsActive, existingDevice.UserId);
+            existingDevice.Update(request.Description, request.Manufacturer, request.Url, request.IsActive, existingDevice.UserId, request.LastCommunication, request.IpAddress, request.Location, request.FirmwareVersion);
             _unitOfWork.DevicesRepository.UpdateDeviceAsync(existingDevice);
             await _unitOfWork.CommitAsync();
 

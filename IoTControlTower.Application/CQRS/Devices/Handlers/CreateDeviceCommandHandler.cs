@@ -28,7 +28,7 @@ public class CreateDeviceCommandHandler(UnitOfWork unitOfWork,
         {
             _validator.ValidateAndThrow(request);
             var user = await _userManager.FindByEmailAsync(request.Email);
-            var newDevice = new Device(request.Description, request.Manufacturer, request.Url, request.IsActive, user.Id);
+            var newDevice = new Device(request.Description, request.Manufacturer, request.Url, request.IsActive, user.Id, request.LastCommunication, request.IpAddress, request.Location, request.FirmwareVersion);
 
             _logger.LogInformation("Adding new device to repository");
             await _unitOfWork.DevicesRepository.AddDeviceAsync(newDevice);
