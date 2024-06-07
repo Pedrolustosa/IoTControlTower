@@ -33,6 +33,7 @@ The project follows an architecture based on Clean Architecture and DDD (Domain-
 - **CQRS (Command Query Responsibility Segregation)**: Architecture pattern used to separate command and query operations, improving scalability and flexibility.
 - **MediatR**: Library for implementing the mediator pattern, used to decouple communication between application components.
 - **Dapper**: Micro ORM used for data access, providing faster execution and lower overhead compared to full ORM frameworks.
+- **Redis**: In-memory data structure store used to cache frequently accessed data for improved performance.
 
 ## Features
 
@@ -51,6 +52,11 @@ To run the project locally, follow the instructions below:
 # Prerequisites
 - Ensure you have the .NET 8 SDK installed on your machine. You can download it [here](https://dotnet.microsoft.com/download).
 - Have Git installed on your machine to clone the repository. You can download it [here](https://git-scm.com/downloads).
+- Have Docker installed on your machine. You can download it [here](https://www.docker.com/get-started/).
+- To install Redis [here](https://redis.io/docs/latest/operate/oss_and_stack/install/install-stack/docker/?utm_source=redisinsight&utm_medium=main&utm_campaign=docker), you can run the following command:
+   ```bash
+   docker run -d --name redis-stack-server -p 6379:6379 redis/redis-stack-server:latest
+   ```
 
 # Cloning the Repository
 1. Open the terminal or command prompt.
