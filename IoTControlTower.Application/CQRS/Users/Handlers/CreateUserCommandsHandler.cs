@@ -3,7 +3,7 @@ using FluentValidation;
 using Microsoft.Extensions.Logging;
 using Microsoft.AspNetCore.Identity;
 using IoTControlTower.Domain.Entities;
-using IoTControlTower.Infra.Repository;
+using IoTControlTower.Infra.Data.Repositories;
 using IoTControlTower.Application.CQRS.Users.Commands;
 using IoTControlTower.Application.CQRS.Users.Notifications;
 

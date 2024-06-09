@@ -2,7 +2,7 @@
 using System.Data;
 using IoTControlTower.Domain.Entities;
 
-namespace IoTControlTower.Infra.Repository.UserRepository;
+namespace IoTControlTower.Infra.Data.Repositories.UserRepository;
 
 public class UserDapperRepository(IDbConnection dbConnection) : IUserDapperRepository
 {

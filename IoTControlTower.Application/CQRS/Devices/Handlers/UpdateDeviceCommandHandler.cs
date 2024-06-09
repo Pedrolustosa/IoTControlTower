@@ -1,7 +1,7 @@
 ﻿using MediatR;
 using Microsoft.Extensions.Logging;
 using IoTControlTower.Domain.Entities;
-using IoTControlTower.Infra.Repository;
+using IoTControlTower.Infra.Data.Repositories;
 using IoTControlTower.Application.CQRS.Devices.Commands;
 
 namespace IoTControlTower.Application.CQRS.Devices.Handlers;

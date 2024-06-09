@@ -1,10 +1,10 @@
 ﻿namespace IoTControlTower.Domain.Validation;
 
-public class DomainValidation(string error) : Exception(error)
+public class DomainExceptions(string error) : Exception(error)
 {
     public static void When(bool hasError, string error)
     {
         if (hasError)
-            throw new DomainValidation(error);
+            throw new DomainExceptions(error);
     }
 }

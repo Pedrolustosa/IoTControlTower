@@ -2,7 +2,7 @@
 using IoTControlTower.Domain.Entities;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 
-namespace IoTControlTower.Infra.Context
+namespace IoTControlTower.Infra.Data.Context
 {
     public class IoTControlTowerContext(DbContextOptions<IoTControlTowerContext> options) : IdentityDbContext<User>(options)
     {

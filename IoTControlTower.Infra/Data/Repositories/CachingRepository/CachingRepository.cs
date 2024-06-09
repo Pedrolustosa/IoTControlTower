@@ -1,14 +1,14 @@
 ﻿using Microsoft.Extensions.Caching.Distributed;
 using IoTControlTower.Domain.Interface.CachingRepository;
 
-namespace IoTControlTower.Infra.Repository.CachingRepository
+namespace IoTControlTower.Infra.Data.Repositories.CachingRepository
 {
     public class CachingRepository(IDistributedCache distributedCache) : ICachingRepository
     {
         private readonly IDistributedCache _cache = distributedCache;
 
         private readonly DistributedCacheEntryOptions _options = new()
-        { 
+        {
             AbsoluteExpirationRelativeToNow = TimeSpan.FromSeconds(3600),
             SlidingExpiration = TimeSpan.FromSeconds(1200)
         };

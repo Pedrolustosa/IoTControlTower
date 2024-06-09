@@ -1,10 +1,10 @@
 ﻿using Microsoft.Extensions.Logging;
-using IoTControlTower.Infra.Context;
 using IoTControlTower.Domain.Entities;
+using IoTControlTower.Infra.Data.Context;
 
-namespace IoTControlTower.Infra.Repository.DeviceRepository;
+namespace IoTControlTower.Infra.Data.Repositories.DeviceRepository;
 
-public class DeviceEFRepository(IoTControlTowerContext ioTControlTowerContext, 
+public class DeviceEFRepository(IoTControlTowerContext ioTControlTowerContext,
                                 ILogger<DeviceEFRepository> logger) : IDeviceRepository
 {
     private readonly ILogger<DeviceEFRepository> _logger = logger ?? throw new ArgumentNullException(nameof(logger));

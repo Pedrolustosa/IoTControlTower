@@ -1,12 +1,12 @@
 ﻿using Microsoft.Extensions.Logging;
-using IoTControlTower.Infra.Context;
 using Microsoft.EntityFrameworkCore;
 using IoTControlTower.Domain.Entities;
+using IoTControlTower.Infra.Data.Context;
 using IoTControlTower.Domain.Interface.UserRepository;
 
-namespace IoTControlTower.Infra.Repository.UserRepository;
+namespace IoTControlTower.Infra.Data.Repositories.UserRepository;
 
-public class UserEFRepository(IoTControlTowerContext context, 
+public class UserEFRepository(IoTControlTowerContext context,
                               ILogger<UserEFRepository> logger) : IUserRepository
 {
     private readonly IoTControlTowerContext _context = context;

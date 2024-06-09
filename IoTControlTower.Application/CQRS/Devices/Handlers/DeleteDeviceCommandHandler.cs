@@ -3,7 +3,7 @@ using Microsoft.Extensions.Logging;
 using IoTControlTower.Domain.Entities;
 using IoTControlTower.Domain.Interface.UnitOfWork;
 using IoTControlTower.Application.CQRS.Devices.Commands;
-using IoTControlTower.Infra.Repository.DeviceRepository;
+using IoTControlTower.Infra.Data.Repositories.DeviceRepository;
 
 namespace IoTControlTower.Application.CQRS.Devices.Handlers;
 

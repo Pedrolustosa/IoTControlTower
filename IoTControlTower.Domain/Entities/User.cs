@@ -36,7 +36,7 @@ public class User : IdentityUser
     [JsonConstructor]
     public User(string id, string fullName, string userName, string password, string email, DateTime? dateOfBirth, Gender gender, string phoneNumber, string address, string city, string state, string country, string postalCode, string role, DateTime? lastLogin, DateTime? updateDate, DateTime? registrationDate, DateTime? lastPasswordChangeDate)
     {
-        DomainValidation.When(string.IsNullOrEmpty(id), "Invalid Id value");
+        DomainExceptions.When(string.IsNullOrEmpty(id), "Invalid Id value");
         Id = id;
         ValidateDomain(fullName, userName, password, email, dateOfBirth, gender, phoneNumber, address, city, state, country, postalCode, role, lastLogin, updateDate, registrationDate, lastPasswordChangeDate);
     }
@@ -48,8 +48,8 @@ public class User : IdentityUser
 
     private void ValidateDomain(string fullName, string userName, string password, string email, DateTime? dateOfBirth, Gender gender, string phoneNumber, string address, string city, string state, string country, string postalCode, string role, DateTime? lastLogin, DateTime? updateDate, DateTime? registrationDate, DateTime? lastPasswordChangeDate)
     {
-        DomainValidation.When(string.IsNullOrEmpty(userName), "Invalid userName. Required");
-        DomainValidation.When(string.IsNullOrEmpty(password), "Invalid password. Required");
+        DomainExceptions.When(string.IsNullOrEmpty(userName), "Invalid userName. Required");
+        DomainExceptions.When(string.IsNullOrEmpty(password), "Invalid password. Required");
 
         UserName = userName;
         PasswordHash = password;

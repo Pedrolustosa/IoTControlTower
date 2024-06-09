@@ -30,7 +30,7 @@ public sealed class Device : Entity
     [JsonConstructor]
     public Device(int id, string description, string manufacturer, string url, bool? isActive, string? userId, DateTime? lastCommunication, string? ipAddress, string? location, string? firmwareVersion)
     {
-        DomainValidation.When(id < 0, "Invalid Id value");
+        DomainExceptions.When(id < 0, "Invalid Id value");
         Id = id;
         ValidateDomain(description, manufacturer, url, isActive, userId, lastCommunication, ipAddress, location, firmwareVersion);
     }
@@ -42,10 +42,10 @@ public sealed class Device : Entity
 
     private void ValidateDomain(string description, string manufacturer, string url, bool? isActive, string? userId, DateTime? lastCommunication, string? ipAddress, string? location, string? firmwareVersion)
     {
-        DomainValidation.When(string.IsNullOrEmpty(description), "Invalid description. Required");
-        DomainValidation.When(string.IsNullOrEmpty(manufacturer), "Invalid manufacturer. Required");
-        DomainValidation.When(string.IsNullOrEmpty(url), "Invalid url. Required");
-        DomainValidation.When(string.IsNullOrEmpty(userId), "Invalid User. Required");
+        DomainExceptions.When(string.IsNullOrEmpty(description), "Invalid description. Required");
+        DomainExceptions.When(string.IsNullOrEmpty(manufacturer), "Invalid manufacturer. Required");
+        DomainExceptions.When(string.IsNullOrEmpty(url), "Invalid url. Required");
+        DomainExceptions.When(string.IsNullOrEmpty(userId), "Invalid User. Required");
 
         Description = description;
         Manufacturer = manufacturer;

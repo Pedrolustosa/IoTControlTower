@@ -1,14 +1,14 @@
 ﻿using Microsoft.Extensions.Logging;
-using IoTControlTower.Infra.Context;
+using IoTControlTower.Infra.Data.Context;
 using IoTControlTower.Domain.Interface.UnitOfWork;
 using IoTControlTower.Domain.Interface.UserRepository;
-using IoTControlTower.Infra.Repository.UserRepository;
-using IoTControlTower.Infra.Repository.DeviceRepository;
+using IoTControlTower.Infra.Data.Repositories.UserRepository;
+using IoTControlTower.Infra.Data.Repositories.DeviceRepository;
 
-namespace IoTControlTower.Infra.Repository;
+namespace IoTControlTower.Infra.Data.Repositories;
 
-public class UnitOfWork(IoTControlTowerContext ioTControlTowerContext, 
-                        ILogger<UserEFRepository> logger, 
+public class UnitOfWork(IoTControlTowerContext ioTControlTowerContext,
+                        ILogger<UserEFRepository> logger,
                         ILogger<DeviceEFRepository> loggerEF) : IUnitOfWork, IDisposable
 {
     private IUserRepository _userRepository;
@@ -18,9 +18,9 @@ public class UnitOfWork(IoTControlTowerContext ioTControlTowerContext,
     private readonly ILogger<DeviceEFRepository> _loggerEF = loggerEF;
     private readonly IoTControlTowerContext _controlTowerContext = ioTControlTowerContext;
 
-    public IDeviceRepository DevicesRepository 
+    public IDeviceRepository DevicesRepository
     {
-        get 
+        get
         {
             return _devicesRepository ??= new DeviceEFRepository(_controlTowerContext, _loggerEF);
         }
