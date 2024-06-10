@@ -95,6 +95,7 @@ namespace IoTControlTower.API.Controllers
                     _logger.LogWarning("Device data is null");
                     return BadRequest("Invalid device data");
                 }
+                deviceDTO.Email = User?.Claims?.FirstOrDefault()?.Value ?? string.Empty;
                 await _deviceService.UpdateDevice(deviceDTO);
                 _logger.LogInformation("Device updated successfully with id: {Id}", id);
                 return Ok(deviceDTO);

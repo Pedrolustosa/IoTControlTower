@@ -4,6 +4,7 @@ using IoTControlTower.Infra.Data.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace IoTControlTower.Infra.Migrations
 {
     [DbContext(typeof(IoTControlTowerContext))]
-    partial class IoTControlTowerContextModelSnapshot : ModelSnapshot
+    [Migration("20240610171043_DB_v12")]
+    partial class DB_v12
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -236,14 +239,14 @@ namespace IoTControlTower.Infra.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "2b6c8507-2e00-4930-a59d-8aa7fe68fad5",
+                            Id = "cc966dbd-e69a-478d-bc24-64b82ac6a255",
                             ConcurrencyStamp = "1",
                             Name = "Admin",
                             NormalizedName = "Admin"
                         },
                         new
                         {
-                            Id = "137c9b7e-4c6d-492b-895c-d186c314ab09",
+                            Id = "55c8c0d3-cb10-4327-b081-7a6dd9b7f079",
                             ConcurrencyStamp = "2",
                             Name = "User",
                             NormalizedName = "User"

@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using IoTControlTower.API.Models;
+using Microsoft.AspNetCore.Authorization;
 using IoTControlTower.Application.Interface;
 using IoTControlTower.Application.DTO.Users;
 
@@ -14,6 +15,7 @@ namespace IoTControlTower.API.Controllers
         private readonly IAuthenticateService _authenticationService = authenticationService;
 
         [HttpPost("Authenticate")]
+        [AllowAnonymous]
         public async Task<ActionResult<UserToken>> Authenticate([FromBody] LoginDTO loginDTO)
         {
             _logger.LogInformation("Authenticate() - Attempting to authenticate user: {Email}", loginDTO.Email);

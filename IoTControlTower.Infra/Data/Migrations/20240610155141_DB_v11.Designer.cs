@@ -4,6 +4,7 @@ using IoTControlTower.Infra.Data.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace IoTControlTower.Infra.Migrations
 {
     [DbContext(typeof(IoTControlTowerContext))]
-    partial class IoTControlTowerContextModelSnapshot : ModelSnapshot
+    [Migration("20240610155141_DB_v11")]
+    partial class DB_v11
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -31,8 +34,8 @@ namespace IoTControlTower.Infra.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int?>("AlarmSettings")
-                        .HasColumnType("int");
+                    b.Property<string>("AlarmSettings")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("ConnectionType")
                         .HasColumnType("int");
@@ -61,8 +64,8 @@ namespace IoTControlTower.Infra.Migrations
                     b.Property<DateTime?>("LastHealthCheckDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<int?>("LastKnownStatus")
-                        .HasColumnType("int");
+                    b.Property<string>("LastKnownStatus")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime?>("LastMaintenanceDate")
                         .HasColumnType("datetime2");
@@ -70,8 +73,8 @@ namespace IoTControlTower.Infra.Migrations
                     b.Property<string>("Location")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("MaintenanceHistory")
-                        .HasColumnType("int");
+                    b.Property<string>("MaintenanceHistory")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime?>("ManufactureDate")
                         .HasColumnType("datetime2");
@@ -82,8 +85,8 @@ namespace IoTControlTower.Infra.Migrations
                     b.Property<string>("Owner")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("SensorType")
-                        .HasColumnType("int");
+                    b.Property<string>("SensorType")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("SerialNumber")
                         .HasColumnType("nvarchar(max)");
@@ -236,14 +239,14 @@ namespace IoTControlTower.Infra.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "2b6c8507-2e00-4930-a59d-8aa7fe68fad5",
+                            Id = "5d4d94eb-eeff-447d-aaf2-a4aa271d94dc",
                             ConcurrencyStamp = "1",
                             Name = "Admin",
                             NormalizedName = "Admin"
                         },
                         new
                         {
-                            Id = "137c9b7e-4c6d-492b-895c-d186c314ab09",
+                            Id = "242eed9b-2d69-4dd4-9bc9-0bb1a26e5237",
                             ConcurrencyStamp = "2",
                             Name = "User",
                             NormalizedName = "User"

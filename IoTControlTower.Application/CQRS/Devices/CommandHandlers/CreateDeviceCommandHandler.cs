@@ -3,6 +3,7 @@ using FluentValidation;
 using Microsoft.Extensions.Logging;
 using Microsoft.AspNetCore.Identity;
 using IoTControlTower.Domain.Entities;
+using IoTControlTower.Domain.Validation;
 using IoTControlTower.Infra.Data.Repositories;
 using IoTControlTower.Application.CQRS.Devices.Commands;
 using IoTControlTower.Application.CQRS.Devices.Notifications;
@@ -24,31 +25,84 @@ public class CreateDeviceCommandHandler(UnitOfWork unitOfWork,
     public async Task<Device> Handle(CreateDeviceCommand request, CancellationToken cancellationToken)
     {
         _logger.LogInformation("Handling CreateDeviceCommand for description: {Description}", request.Description);
+
         try
         {
-            _validator.ValidateAndThrow(request);
-            var user = await _userManager.FindByEmailAsync(request.Email);
-            var newDevice = new Device(request.Description, request.Manufacturer, request.Url, request.IsActive, user.Id, request.LastCommunication, request.IpAddress, request.Location, request.FirmwareVersion);
-
-            _logger.LogInformation("Adding new device to repository");
-            await _unitOfWork.DevicesRepository.AddDeviceAsync(newDevice);
-            await _unitOfWork.CommitAsync();
-
-            _logger.LogInformation("Publishing DeviceCreatedNotification for device: {DeviceId}", newDevice.Id);
-            await _mediator.Publish(new DeviceCreatedNotification(newDevice), cancellationToken);
-
-            _logger.LogInformation("CreateDeviceCommand handled successfully for device: {DeviceId}", newDevice.Id);
+            var user = await GetUserByEmailAsync(request.Email);
+            request.UserId = user.Id;
+            ValidateCommand(request);
+            var newDevice = await CreateNewDeviceAsync(request, request.UserId);
+            await PublishDeviceCreatedNotificationAsync(newDevice, cancellationToken);
             return newDevice;
         }
         catch (ValidationException ex)
         {
-            _logger.LogWarning(ex, "Validation failed for CreateDeviceCommand");
+            HandleValidationException(ex);
             throw;
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Error occurred while handling CreateDeviceCommand");
+            HandleGeneralException(ex);
             throw;
         }
+    }
+
+    private void ValidateCommand(CreateDeviceCommand request)
+    {
+        _validator.ValidateAndThrow(request);
+    }
+
+    private async Task<Device> CreateNewDeviceAsync(CreateDeviceCommand request, string userId)
+    {
+        var newDevice = new Device(description: request.Description,
+                                    manufacturer: request.Manufacturer,
+                                    url: request.Url,
+                                    isActive: request.IsActive,
+                                    userId: userId,
+                                    lastCommunication: request.LastCommunication,
+                                    ipAddress: request.IpAddress,
+                                    location: request.Location,
+                                    firmwareVersion: request.FirmwareVersion,
+                                    manufactureDate: request.ManufactureDate,
+                                    serialNumber: request.SerialNumber,
+                                    connectionType: request.ConnectionType,
+                                    healthStatus: request.HealthStatus,
+                                    lastKnownStatus: request.LastKnownStatus,
+                                    owner: request.Owner,
+                                    installationDate: request.InstallationDate,
+                                    lastMaintenanceDate: request.LastMaintenanceDate,
+                                    sensorType: request.SensorType,
+                                    alarmSettings: request.AlarmSettings,
+                                    lastHealthCheckDate: request.LastHealthCheckDate,
+                                    maintenanceHistory: request.MaintenanceHistory);
+        await AddDeviceToRepositoryAsync(newDevice);
+        return newDevice;
+    }
+
+    private async Task PublishDeviceCreatedNotificationAsync(Device newDevice, CancellationToken cancellationToken)
+    {
+        await _mediator.Publish(new DeviceCreatedNotification(newDevice), cancellationToken);
+    }
+
+    private async Task<User> GetUserByEmailAsync(string email)
+    {
+        var user = await _userManager.FindByEmailAsync(email);
+        return user ?? throw new DomainExceptions($"User not found for email: {email}");
+    }
+
+    private async Task AddDeviceToRepositoryAsync(Device newDevice)
+    {
+        await _unitOfWork.DevicesRepository.AddDeviceAsync(newDevice);
+        await _unitOfWork.CommitAsync();
+    }
+
+    private void HandleValidationException(ValidationException ex)
+    {
+        _logger.LogWarning(ex, "Validation failed for CreateDeviceCommand");
+    }
+
+    private void HandleGeneralException(Exception ex)
+    {
+        _logger.LogError(ex, "Error occurred while handling CreateDeviceCommand");
     }
 }

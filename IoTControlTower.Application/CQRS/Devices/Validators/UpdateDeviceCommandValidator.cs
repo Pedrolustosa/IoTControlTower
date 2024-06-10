@@ -3,9 +3,9 @@ using IoTControlTower.Application.CQRS.Devices.Commands;
 
 namespace IoTControlTower.Application.CQRS.Devices.Validators;
 
-public class CreateDeviceCommandValidator : AbstractValidator<CreateDeviceCommand>
+public class UpdateDeviceCommandValidator : AbstractValidator<UpdateDeviceCommand>
 {
-    public CreateDeviceCommandValidator()
+    public UpdateDeviceCommandValidator()
     {
         RuleFor(device => device.Description).NotEmpty().WithMessage("Description is required.");
         RuleFor(device => device.Manufacturer).NotEmpty().WithMessage("Manufacturer is required.");

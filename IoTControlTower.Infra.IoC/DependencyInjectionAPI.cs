@@ -2,101 +2,109 @@
 using FluentValidation;
 using System.Data.SqlClient;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.AspNetCore.Identity;
-using IoTControlTower.Domain.Entities;
-using Microsoft.AspNetCore.Mvc.Routing;
-using Microsoft.Extensions.Configuration;
-using IoTControlTower.Infra.Data.Context;
+using IoTControlTower.Application.CQRS.Devices.Commands;
+using IoTControlTower.Application.CQRS.Devices.Validators;
+using IoTControlTower.Application.CQRS.Users.Commands;
 using IoTControlTower.Application.Mapping;
+using IoTControlTower.Application.Interface;
 using IoTControlTower.Application.Service;
 using IoTControlTower.Application.DTO.Email;
 using IoTControlTower.Application.Validator;
-using IoTControlTower.Application.Interface;
-using IoTControlTower.Infra.Data.Repositories;
-using Microsoft.AspNetCore.Mvc.Infrastructure;
-using Microsoft.Extensions.DependencyInjection;
-using IoTControlTower.Domain.Interface.UnitOfWork;
-using IoTControlTower.Application.CQRS.Users.Commands;
-using IoTControlTower.Domain.Interface.UserRepository;
-using IoTControlTower.Application.CQRS.Devices.Commands;
+using IoTControlTower.Domain.Entities;
 using IoTControlTower.Domain.Interface.CachingRepository;
-using IoTControlTower.Infra.Data.Repositories.UserRepository;
-using IoTControlTower.Infra.Data.Repositories.DeviceRepository;
+using IoTControlTower.Domain.Interface.UnitOfWork;
+using IoTControlTower.Domain.Interface.UserRepository;
+using IoTControlTower.Infra.Data.Context;
+using IoTControlTower.Infra.Data.Repositories;
 using IoTControlTower.Infra.Data.Repositories.CachingRepository;
-using IoTControlTower.Application.CQRS.Devices.Validators;
+using IoTControlTower.Infra.Data.Repositories.DeviceRepository;
+using IoTControlTower.Infra.Data.Repositories.UserRepository;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc.Infrastructure;
+using Microsoft.AspNetCore.Mvc.Routing;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 
-namespace IoTControlTower.Infra.IoC;
-
-public static class DependencyInjectionAPI
+namespace IoTControlTower.Infra.IoC
 {
-    public static IServiceCollection AddInfrastructureAPI(this IServiceCollection services, IConfiguration configuration)
+    public static class DependencyInjectionAPI
     {
-        // Context
-        var sqlServerConnection = configuration.GetConnectionString("DefaultConnection");
-        services.AddDbContext<IoTControlTowerContext>(options => options.UseSqlServer(configuration.GetConnectionString("DefaultConnection"),
-        b => b.MigrationsAssembly(typeof(IoTControlTowerContext).Assembly.FullName)));
-        services.AddSingleton<IDbConnection>(provider =>
+        public static IServiceCollection AddInfrastructureAPI(this IServiceCollection services, IConfiguration configuration)
         {
-            var connection = new SqlConnection(sqlServerConnection);
-            connection.Open();
-            return connection;
-        });
+            // Context
+            var sqlServerConnection = configuration.GetConnectionString("DefaultConnection");
+            services.AddDbContext<IoTControlTowerContext>(options => options.UseSqlServer(sqlServerConnection,
+                b => b.MigrationsAssembly(typeof(IoTControlTowerContext).Assembly.FullName)));
+            services.AddSingleton<IDbConnection>(provider =>
+            {
+                var connection = new SqlConnection(sqlServerConnection);
+                connection.Open();
+                return connection;
+            });
 
-        // Identity
-        services.AddIdentity<User, IdentityRole>().AddEntityFrameworkStores<IoTControlTowerContext>().AddDefaultTokenProviders();
+            // Identity
+            services.AddIdentity<User, IdentityRole>()
+                    .AddEntityFrameworkStores<IoTControlTowerContext>()
+                    .AddDefaultTokenProviders();
 
-        // Email configuration
-        var emailConfig = configuration.GetSection("EmailConfiguration").Get<EmailDTO>();
-        services.AddSingleton(emailConfig);
-        services.Configure<IdentityOptions>(opts => opts.SignIn.RequireConfirmedEmail = true);
+            // Email configuration
+            var emailConfig = configuration.GetSection("EmailConfiguration").Get<EmailDTO>();
+            services.AddSingleton(emailConfig);
+            services.Configure<IdentityOptions>(opts => opts.SignIn.RequireConfirmedEmail = true);
 
-        // FluentValidator
-        services.AddTransient<IValidator<CreateUserCommand>, CreateUserCommandValidator>();
-        services.AddTransient<IValidator<UpdateUserCommand>, UpdateUserCommandValidator>();
-        services.AddTransient<IValidator<CreateDeviceCommand>, CreateDeviceCommandValidator>();
+            // FluentValidator
+            services.AddTransient<IValidator<CreateUserCommand>, CreateUserCommandValidator>();
+            services.AddTransient<IValidator<UpdateUserCommand>, UpdateUserCommandValidator>();
+            services.AddTransient<IValidator<CreateDeviceCommand>, CreateDeviceCommandValidator>();
+            services.AddTransient<IValidator<UpdateDeviceCommand>, UpdateDeviceCommandValidator>();
 
-        // Mappings
-        services.AddAutoMapper(typeof(UserProfile));
-        services.AddAutoMapper(typeof(DeviceProfile));
+            // Mappings
+            services.AddAutoMapper(typeof(UserProfile), typeof(DeviceProfile));
 
-        // Repositories
-        services.AddScoped<IUnitOfWork, UnitOfWork>();
-        services.AddScoped<IUserRepository, UserEFRepository>();
-        services.AddScoped<IUserDapperRepository, UserDapperRepository>();
-        services.AddScoped<IDeviceRepository, DeviceEFRepository>();
-        services.AddScoped<IDeviceDapperRepository, DeviceDapperRepository>();
+            // Repositories
+            services.AddScoped<IUnitOfWork, UnitOfWork>();
+            services.AddScoped<IUserRepository, UserEFRepository>();
+            services.AddScoped<IUserDapperRepository, UserDapperRepository>();
+            services.AddScoped<IDeviceRepository, DeviceEFRepository>();
+            services.AddScoped<IDeviceDapperRepository, DeviceDapperRepository>();
 
-        // Registro do UnitOfWork
-        services.AddScoped<UnitOfWork>();
+            // UnitOfWork Registration
+            services.AddScoped<UnitOfWork>();
 
-        // Cache - Redis
-        services.AddScoped<ICachingRepository, CachingRepository>();
-        services.AddStackExchangeRedisCache(r => {
-            r.InstanceName = "";
-            r.Configuration = "localhost:6379";
-        });
+            // Cache - Redis
+            services.AddScoped<ICachingRepository, CachingRepository>();
+            services.AddStackExchangeRedisCache(r =>
+            {
+                r.InstanceName = "";
+                r.Configuration = "localhost:6379";
+            });
 
-        // Serices
-        services.AddScoped<IUserService, UserService>();
-        services.AddScoped<IEmailService, EmailService>();
-        services.AddScoped<IDeviceService, DeviceService>();
-        services.AddScoped<IAuthenticateService, AuthenticateService>();
+            // Services
+            services.AddScoped<IUserService, UserService>();
+            services.AddScoped<IEmailService, EmailService>();
+            services.AddScoped<IDeviceService, DeviceService>();
+            services.AddScoped<IAuthenticateService, AuthenticateService>();
 
-        // Url
-        services.AddSingleton<IActionContextAccessor, ActionContextAccessor>();
-        services.AddScoped<IUrlHelper>(x => {
-            var actionContext = x.GetRequiredService<IActionContextAccessor>().ActionContext;
-            var factory = x.GetRequiredService<IUrlHelperFactory>();
-            return factory.GetUrlHelper(actionContext);
-        });
+            // URL
+            services.AddSingleton<IActionContextAccessor, ActionContextAccessor>();
+            services.AddScoped(x =>
+            {
+                var actionContext = x.GetRequiredService<IActionContextAccessor>().ActionContext;
+                var factory = x.GetRequiredService<IUrlHelperFactory>();
+                return factory.GetUrlHelper(actionContext);
+            });
 
-        var myhandlers = AppDomain.CurrentDomain.Load("IotControlTower.Application");
-        services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblies(myhandlers));
+            // MediatR Handlers
+            var myHandlers = AppDomain.CurrentDomain.Load("IotControlTower.Application");
+            services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblies(myHandlers));
 
-        services.AddControllersWithViews();
-        services.AddControllers();
-        services.AddRouting(options => { options.LowercaseUrls = true; });
-        return services;
+            // MVC
+            services.AddControllersWithViews();
+            services.AddControllers();
+            services.AddRouting(options => { options.LowercaseUrls = true; });
+
+            return services;
+        }
     }
 }
