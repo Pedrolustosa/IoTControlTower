@@ -32,7 +32,7 @@ namespace IoTControlTower.Infra.IoC
     {
         public static IServiceCollection AddInfrastructureAPI(this IServiceCollection services, IConfiguration configuration)
         {
-            // Context
+            // Database Context
             var sqlServerConnection = configuration.GetConnectionString("DefaultConnection");
             services.AddDbContext<IoTControlTowerContext>(options => options.UseSqlServer(sqlServerConnection,
                 b => b.MigrationsAssembly(typeof(IoTControlTowerContext).Assembly.FullName)));
