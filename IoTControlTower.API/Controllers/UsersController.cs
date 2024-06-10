@@ -44,6 +44,7 @@ public class UsersController(IUserService userService,
     }
 
     [HttpPost("CreateUser")]
+    [AllowAnonymous]
     public async Task<IActionResult> CreateUser([FromBody] UserDTO userRegisterDTO)
     {
         _logger.LogInformation("CreateUser() - Attempting to create user: {Email}", userRegisterDTO.Email);
