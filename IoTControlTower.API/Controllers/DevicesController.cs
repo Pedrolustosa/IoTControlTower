@@ -7,7 +7,6 @@ namespace IoTControlTower.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [AllowAnonymous]
     public class DevicesController(ILogger<DevicesController> logger, 
                                    IDeviceService deviceService) : ControllerBase
     {
