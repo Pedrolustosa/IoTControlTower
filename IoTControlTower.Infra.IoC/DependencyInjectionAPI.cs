@@ -24,6 +24,7 @@ using IoTControlTower.Domain.Interface.CachingRepository;
 using IoTControlTower.Infra.Data.Repositories.UserRepository;
 using IoTControlTower.Infra.Data.Repositories.DeviceRepository;
 using IoTControlTower.Infra.Data.Repositories.CachingRepository;
+using IoTControlTower.Application.CQRS.Devices.Validators;
 
 namespace IoTControlTower.Infra.IoC;
 

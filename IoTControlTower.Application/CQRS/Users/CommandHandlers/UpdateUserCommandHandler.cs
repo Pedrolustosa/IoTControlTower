@@ -6,7 +6,7 @@ using IoTControlTower.Domain.Entities;
 using IoTControlTower.Infra.Data.Repositories;
 using IoTControlTower.Application.CQRS.Users.Commands;
 
-namespace IoTControlTower.Application.CQRS.Users.Handlers;
+namespace IoTControlTower.Application.CQRS.Users.CommandHandlers;
 
 public class UpdateUserCommandHandler(UnitOfWork unitOfWork,
                                       UserManager<User> userManager,

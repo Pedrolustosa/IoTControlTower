@@ -4,7 +4,7 @@ using IoTControlTower.Domain.Entities;
 using IoTControlTower.Infra.Data.Repositories;
 using IoTControlTower.Application.CQRS.Devices.Commands;
 
-namespace IoTControlTower.Application.CQRS.Devices.Handlers;
+namespace IoTControlTower.Application.CQRS.Devices.CommandHandlers;
 
 public class UpdateDeviceCommandHandler(UnitOfWork unitOfWork,
                                         ILogger<UpdateDeviceCommandHandler> logger) : IRequestHandler<UpdateDeviceCommand, Device>

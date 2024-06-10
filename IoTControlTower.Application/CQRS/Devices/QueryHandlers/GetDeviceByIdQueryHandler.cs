@@ -5,7 +5,7 @@ using IoTControlTower.Domain.Entities;
 using IoTControlTower.Application.CQRS.Devices.Queries;
 using IoTControlTower.Domain.Interface.CachingRepository;
 
-namespace IoTControlTower.Application.CQRS.Devices.Handlers;
+namespace IoTControlTower.Application.CQRS.Devices.QueryHandlers;
 
 public class GetDeviceByIdQueryHandler(IDeviceDapperRepository devicesDapperRepository,
                                        ILogger<GetDeviceByIdQueryHandler> logger,

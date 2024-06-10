@@ -7,17 +7,17 @@ using IoTControlTower.Infra.Data.Repositories;
 using IoTControlTower.Application.CQRS.Devices.Commands;
 using IoTControlTower.Application.CQRS.Devices.Notifications;
 
-namespace IoTControlTower.Application.CQRS.Devices.Handlers;
+namespace IoTControlTower.Application.CQRS.Devices.CommandHandlers;
 
-public class CreateDeviceCommandHandler(UnitOfWork unitOfWork, 
-                                        IValidator<CreateDeviceCommand> validator, 
+public class CreateDeviceCommandHandler(UnitOfWork unitOfWork,
+                                        IValidator<CreateDeviceCommand> validator,
                                         IMediator mediator,
                                         UserManager<User> userManager,
                                         ILogger<CreateDeviceCommandHandler> logger) : IRequestHandler<CreateDeviceCommand, Device>
 {
     private readonly IMediator _mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
     private readonly UnitOfWork _unitOfWork = unitOfWork ?? throw new ArgumentNullException(nameof(unitOfWork));
-    private readonly UserManager<User> _userManager = userManager  ?? throw new ArgumentNullException(nameof(userManager));
+    private readonly UserManager<User> _userManager = userManager ?? throw new ArgumentNullException(nameof(userManager));
     private readonly ILogger<CreateDeviceCommandHandler> _logger = logger ?? throw new ArgumentNullException(nameof(logger));
     private readonly IValidator<CreateDeviceCommand> _validator = validator ?? throw new ArgumentNullException(nameof(validator));
 

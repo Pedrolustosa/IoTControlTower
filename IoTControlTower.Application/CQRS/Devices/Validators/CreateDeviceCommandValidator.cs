@@ -1,7 +1,7 @@
 ﻿using FluentValidation;
 using IoTControlTower.Application.CQRS.Devices.Commands;
 
-namespace IoTControlTower.Application.Validator;
+namespace IoTControlTower.Application.CQRS.Devices.Validators;
 
 public class CreateDeviceCommandValidator : AbstractValidator<CreateDeviceCommand>
 {

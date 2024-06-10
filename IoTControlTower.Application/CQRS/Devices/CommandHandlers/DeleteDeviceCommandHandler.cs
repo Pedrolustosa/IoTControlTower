@@ -5,9 +5,9 @@ using IoTControlTower.Domain.Interface.UnitOfWork;
 using IoTControlTower.Application.CQRS.Devices.Commands;
 using IoTControlTower.Infra.Data.Repositories.DeviceRepository;
 
-namespace IoTControlTower.Application.CQRS.Devices.Handlers;
+namespace IoTControlTower.Application.CQRS.Devices.CommandHandlers;
 
-public class DeleteDeviceCommandHandler(IUnitOfWork unitOfWork, 
+public class DeleteDeviceCommandHandler(IUnitOfWork unitOfWork,
                                         ILogger<DeviceEFRepository> logger) : IRequestHandler<DeleteDeviceCommand, Device>
 {
     private readonly IUnitOfWork _unitOfWork = unitOfWork ?? throw new ArgumentNullException(nameof(unitOfWork));

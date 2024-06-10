@@ -3,7 +3,7 @@ using Microsoft.Extensions.Logging;
 using IoTControlTower.Domain.Entities;
 using IoTControlTower.Application.CQRS.Users.Queries;
 
-namespace IoTControlTower.Application.CQRS.Users.Handlers;
+namespace IoTControlTower.Application.CQRS.Users.QueryHandlers;
 
 public class GetUserByEmailQueryHandler(IUserDapperRepository userDapperRepository,
                                         ILogger<GetUserByEmailQueryHandler> logger) : IRequestHandler<GetUserByEmailQuery, User>
