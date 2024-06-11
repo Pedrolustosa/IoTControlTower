@@ -1,7 +1,6 @@
 ﻿using System.Data;
 using FluentValidation;
 using System.Data.SqlClient;
-using Microsoft.AspNetCore.Mvc;
 using IoTControlTower.Application.CQRS.Devices.Commands;
 using IoTControlTower.Application.CQRS.Devices.Validators;
 using IoTControlTower.Application.CQRS.Users.Commands;
@@ -26,11 +25,13 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace IoTControlTower.Infra.IoC
+namespace IoTControlTower.Infra.IoC;
+
+public static class DependencyInjectionAPI
 {
-    public static class DependencyInjectionAPI
+    public static IServiceCollection AddInfrastructureAPI(this IServiceCollection services, IConfiguration configuration)
     {
-        public static IServiceCollection AddInfrastructureAPI(this IServiceCollection services, IConfiguration configuration)
+        try
         {
             // Database Context
             var sqlServerConnection = configuration.GetConnectionString("DefaultConnection");
@@ -105,6 +106,10 @@ namespace IoTControlTower.Infra.IoC
             services.AddRouting(options => { options.LowercaseUrls = true; });
 
             return services;
+        }
+        catch (Exception ex)
+        {
+            throw;
         }
     }
 }

@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace IoTControlTower.Infra.Migrations
 {
     [DbContext(typeof(IoTControlTowerContext))]
-    [Migration("20240610171043_DB_v12")]
-    partial class DB_v12
+    [Migration("20240611232118_DV_v21")]
+    partial class DV_v21
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -29,8 +29,7 @@ namespace IoTControlTower.Infra.Migrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasColumnName("DeviceId");
+                        .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
@@ -95,7 +94,6 @@ namespace IoTControlTower.Infra.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("UserId")
-                        .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Id");
@@ -108,8 +106,7 @@ namespace IoTControlTower.Infra.Migrations
             modelBuilder.Entity("IoTControlTower.Domain.Entities.User", b =>
                 {
                     b.Property<string>("Id")
-                        .HasColumnType("nvarchar(450)")
-                        .HasColumnName("UserId");
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<int>("AccessFailedCount")
                         .HasColumnType("int");
@@ -239,14 +236,14 @@ namespace IoTControlTower.Infra.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "cc966dbd-e69a-478d-bc24-64b82ac6a255",
+                            Id = "684cfd46-8cbf-4429-90c2-847e06ab7f4a",
                             ConcurrencyStamp = "1",
                             Name = "Admin",
                             NormalizedName = "Admin"
                         },
                         new
                         {
-                            Id = "55c8c0d3-cb10-4327-b081-7a6dd9b7f079",
+                            Id = "8deb059d-d10c-4ce7-9c2e-e274e132f722",
                             ConcurrencyStamp = "2",
                             Name = "User",
                             NormalizedName = "User"
@@ -363,9 +360,7 @@ namespace IoTControlTower.Infra.Migrations
                 {
                     b.HasOne("IoTControlTower.Domain.Entities.User", "User")
                         .WithMany("Devices")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("UserId");
 
                     b.Navigation("User");
                 });
