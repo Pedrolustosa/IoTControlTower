@@ -45,6 +45,57 @@ The project follows an architecture based on Clean Architecture and DDD (Domain-
 - **Email Notifications**: Utilizes NETCore.MailKit for sending email notifications via Google SMTP.
 - **Command Query Responsibility Segregation (CQRS)**: Architecture pattern used to separate command and query operations, improving scalability and flexibility. Implemented using ASP.NET Core 8, MediatR, and Dapper for efficient command and query handling.
 
+## Entities and Relationships
+
+### Entities
+
+<details>
+<summary>Device</summary>
+
+- **Description**: Description of the device.
+- **Manufacturer**: Manufacturer of the device.
+- **Url**: Device URL.
+- **IsActive**: Indicates whether the device is active.
+- **LastCommunication**: Last communication of the device.
+- **IpAddress**: Device IP address.
+- **Location**: Location of the device.
+- **FirmwareVersion**: Firmware version of the device.
+- **ManufactureDate**: Manufacture date of the device.
+- **SerialNumber**: Serial number of the device.
+- **ConnectionType**: Connection type of the device.
+- **HealthStatus**: Health status of the device.
+- **LastKnownStatus**: Last known status of the device.
+- **Owner**: Owner of the device.
+- **InstallationDate**: Date of installation of the device.
+- **LastMaintenanceDate**: Last maintenance date of the device.
+- **SensorType**: Type of sensor in the device.
+- **AlarmSettings**: Settings for device alarms.
+- **LastHealthCheckDate**: Date of the last health check of the device.
+- **MaintenanceHistory**: History of maintenance operations on the device.
+</details>
+
+<details>
+<summary>User</summary>
+
+- **FullName**: Full name of the user.
+- **DateOfBirth**: Date of birth of the user.
+- **Gender**: Gender of the user.
+- **Address**: Address of the user.
+- **City**: City of the user.
+- **State**: State of the user.
+- **Country**: Country of the user.
+- **PostalCode**: Postal code of the user.
+- **Role**: Role of the user.
+- **LastLogin**: Last login date of the user.
+- **UpdateDate**: Date of the last update of user information.
+- **RegistrationDate**: Registration date of the user.
+- **LastPasswordChangeDate**: Date of the last password change of the user.
+</details>
+
+### Relationships
+
+- **Device - User**: Each device belongs to a user. The `UserId` property in the `Device` entity establishes this relationship as a foreign key referencing the `Id` property of the `User` entity.
+
 ## Running the Project
 
 To run the project locally, follow the instructions below:
