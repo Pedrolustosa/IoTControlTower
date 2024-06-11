@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace IoTControlTower.Infra.Migrations
 {
     /// <inheritdoc />
-    public partial class DB_v9 : Migration
+    public partial class DV_v21 : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -31,7 +31,7 @@ namespace IoTControlTower.Infra.Migrations
                 name: "AspNetUsers",
                 columns: table => new
                 {
-                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     FullName = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     DateOfBirth = table.Column<DateTime>(type: "datetime2", nullable: true),
                     Gender = table.Column<int>(type: "int", nullable: false),
@@ -62,7 +62,7 @@ namespace IoTControlTower.Infra.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_AspNetUsers", x => x.UserId);
+                    table.PrimaryKey("PK_AspNetUsers", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -103,7 +103,7 @@ namespace IoTControlTower.Infra.Migrations
                         name: "FK_AspNetUserClaims_AspNetUsers_UserId",
                         column: x => x.UserId,
                         principalTable: "AspNetUsers",
-                        principalColumn: "UserId",
+                        principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
@@ -123,7 +123,7 @@ namespace IoTControlTower.Infra.Migrations
                         name: "FK_AspNetUserLogins_AspNetUsers_UserId",
                         column: x => x.UserId,
                         principalTable: "AspNetUsers",
-                        principalColumn: "UserId",
+                        principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
@@ -147,7 +147,7 @@ namespace IoTControlTower.Infra.Migrations
                         name: "FK_AspNetUserRoles_AspNetUsers_UserId",
                         column: x => x.UserId,
                         principalTable: "AspNetUsers",
-                        principalColumn: "UserId",
+                        principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
@@ -167,7 +167,7 @@ namespace IoTControlTower.Infra.Migrations
                         name: "FK_AspNetUserTokens_AspNetUsers_UserId",
                         column: x => x.UserId,
                         principalTable: "AspNetUsers",
-                        principalColumn: "UserId",
+                        principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
@@ -175,23 +175,38 @@ namespace IoTControlTower.Infra.Migrations
                 name: "Devices",
                 columns: table => new
                 {
-                    DeviceId = table.Column<int>(type: "int", nullable: false)
+                    Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Manufacturer = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Url = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     IsActive = table.Column<bool>(type: "bit", nullable: true),
-                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: false)
+                    LastCommunication = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    IpAddress = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Location = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    FirmwareVersion = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    ManufactureDate = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    SerialNumber = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    ConnectionType = table.Column<int>(type: "int", nullable: false),
+                    HealthStatus = table.Column<int>(type: "int", nullable: false),
+                    LastKnownStatus = table.Column<int>(type: "int", nullable: true),
+                    Owner = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    InstallationDate = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    LastMaintenanceDate = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    SensorType = table.Column<int>(type: "int", nullable: true),
+                    AlarmSettings = table.Column<int>(type: "int", nullable: true),
+                    LastHealthCheckDate = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    MaintenanceHistory = table.Column<int>(type: "int", nullable: true),
+                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Devices", x => x.DeviceId);
+                    table.PrimaryKey("PK_Devices", x => x.Id);
                     table.ForeignKey(
                         name: "FK_Devices_AspNetUsers_UserId",
                         column: x => x.UserId,
                         principalTable: "AspNetUsers",
-                        principalColumn: "UserId",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.InsertData(
@@ -199,8 +214,8 @@ namespace IoTControlTower.Infra.Migrations
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
                 values: new object[,]
                 {
-                    { "6b679ff5-766f-4ab2-9a74-4f82a39283e9", "1", "Admin", "Admin" },
-                    { "704ad174-a3d6-4a79-88ce-7f0dd5139661", "2", "User", "User" }
+                    { "684cfd46-8cbf-4429-90c2-847e06ab7f4a", "1", "Admin", "Admin" },
+                    { "8deb059d-d10c-4ce7-9c2e-e274e132f722", "2", "User", "User" }
                 });
 
             migrationBuilder.CreateIndex(

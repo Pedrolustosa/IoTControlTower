@@ -7,24 +7,24 @@ namespace IoTControlTower.Domain.Entities;
 
 public class User : IdentityUser
 {
-    public string? FullName { get; set; }
-    public DateTime? DateOfBirth { get; set; }
-    public Gender Gender { get; set; }
+    public string? FullName { get; private set; }
+    public DateTime? DateOfBirth { get; private set; }
+    public Gender Gender { get; private set; }
 
-    public string? Address { get; set; }
-    public string? City { get; set; }
-    public string? State { get; set; }
-    public string? Country { get; set; }
-    public string? PostalCode { get; set; }
-    public string? Role { get; set; }
+    public string? Address { get; private set; }
+    public string? City { get; private set; }
+    public string? State { get; private set; }
+    public string? Country { get; private set; }
+    public string? PostalCode { get; private set; }
+    public string? Role { get; private set; }
 
-    public DateTime? LastLogin { get; set; }
-    public DateTime? UpdateDate { get; set; }
-    public DateTime? RegistrationDate { get; set; }
-    public DateTime? LastPasswordChangeDate { get; set; }
+    public DateTime? LastLogin { get; private set; }
+    public DateTime? UpdateDate { get; private set; }
+    public DateTime? RegistrationDate { get; private set; }
+    public DateTime? LastPasswordChangeDate { get; private set; }
 
     [JsonIgnore]
-    public ICollection<Device> Devices { get; set; }
+    public ICollection<Device> Devices { get; private set; }
 
     public User() { }
 
@@ -48,8 +48,10 @@ public class User : IdentityUser
 
     private void ValidateDomain(string fullName, string userName, string password, string email, DateTime? dateOfBirth, Gender gender, string phoneNumber, string address, string city, string state, string country, string postalCode, string role, DateTime? lastLogin, DateTime? updateDate, DateTime? registrationDate, DateTime? lastPasswordChangeDate)
     {
-        DomainExceptions.When(string.IsNullOrEmpty(userName), "Invalid userName. Required");
-        DomainExceptions.When(string.IsNullOrEmpty(password), "Invalid password. Required");
+        DomainExceptions.When(string.IsNullOrEmpty(userName), "Username is required");
+        DomainExceptions.When(string.IsNullOrEmpty(password), "Password is required");
+        DomainExceptions.When(string.IsNullOrEmpty(email), "Email is required");
+        DomainExceptions.When(string.IsNullOrEmpty(role), "Role is required");
 
         UserName = userName;
         PasswordHash = password;
@@ -66,7 +68,7 @@ public class User : IdentityUser
         Role = role;
         LastLogin = lastLogin;
         UpdateDate = updateDate;
-        RegistrationDate= registrationDate;
+        RegistrationDate = registrationDate;
         LastPasswordChangeDate = lastPasswordChangeDate;
     }
 }

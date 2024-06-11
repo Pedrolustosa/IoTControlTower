@@ -11,19 +11,11 @@ namespace IoTControlTower.Infra.EntityConfigurations.Users
 
         public void Configure(EntityTypeBuilder<User> builder)
         {
-            try
-            {
-                _logger.LogInformation("Configuring user entity");
+            _logger.LogInformation("Configuring user entity");
 
-                builder.Property(u => u.Id).HasColumnName("UserId");
+            builder.Property(u => u.Id).HasColumnName("UserId");
 
-                _logger.LogInformation("User entity configuration succeeded");
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Error occurred while configuring user entity");
-                throw new Exception("An error occurred while configuring user entity.", ex);
-            }
+            _logger.LogInformation("User entity configuration succeeded");
         }
     }
 }
