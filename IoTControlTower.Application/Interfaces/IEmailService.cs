@@ -1,9 +1,8 @@
 ﻿using IoTControlTower.Application.DTO.Email;
 
-namespace IoTControlTower.Application.Interface
+namespace IoTControlTower.Application.Interface;
+
+public interface IEmailService
 {
-    public interface IEmailService
-    {
-        void SendEmail(MessageDTO message);
-    }
+    void SendEmail(MessageDTO message);
 }

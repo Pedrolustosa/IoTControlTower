@@ -10,8 +10,16 @@ namespace IoTControlTower.Infra.Data.Context
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            base.OnModelCreating(modelBuilder);
-            modelBuilder.ApplyConfigurationsFromAssembly(typeof(IoTControlTowerContext).Assembly);
+            try
+            {
+                base.OnModelCreating(modelBuilder);
+                modelBuilder.ApplyConfigurationsFromAssembly(typeof(IoTControlTowerContext).Assembly);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred while applying entity configurations: {ex.Message}");
+                throw;
+            }
         }
     }
 }

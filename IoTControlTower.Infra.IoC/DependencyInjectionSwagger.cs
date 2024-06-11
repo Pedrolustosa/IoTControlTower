@@ -2,11 +2,13 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace IoTControlTower.Infra.IoC
+namespace IoTControlTower.Infra.IoC;
+
+public static class DependencyInjectionSwagger
 {
-    public static class DependencyInjectionSwagger
+    public static IServiceCollection AddInfrastructureSwagger(this IServiceCollection services, IConfiguration configuration)
     {
-        public static IServiceCollection AddInfrastructureSwagger(this IServiceCollection services, IConfiguration configuration)
+        try
         {
             services.AddSwaggerGen(options =>
             {
@@ -29,8 +31,8 @@ namespace IoTControlTower.Infra.IoC
                     Scheme = "Bearer",
                     BearerFormat = "JWT",
                     Description = @"JWT Authorization header using Bearer.
-                                    Enter 'Bearer' [space] then put in your token.
-                                    Example: 'Bearer 12345abcdef'",
+                                        Enter 'Bearer' [space] then put in your token.
+                                        Example: 'Bearer 12345abcdef'",
                 });
                 options.AddSecurityRequirement(new OpenApiSecurityRequirement()
                 {
@@ -50,7 +52,13 @@ namespace IoTControlTower.Infra.IoC
                     }
                 });
             });
-            return services;
         }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred while configuring Swagger: {ex.Message}");
+            throw;
+        }
+
+        return services;
     }
 }
