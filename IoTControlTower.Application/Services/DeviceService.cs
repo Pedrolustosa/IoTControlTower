@@ -6,14 +6,20 @@ using IoTControlTower.Application.Interface;
 using IoTControlTower.Application.DTO.Device;
 using IoTControlTower.Application.CQRS.Devices.Queries;
 using IoTControlTower.Application.CQRS.Devices.Commands;
+using IoTControlTower.Domain.Entities;
+using IoTControlTower.Application.Interfaces;
+using IoTControlTower.Application.Services;
+using System.Text.Json;
 
 namespace IoTControlTower.Application.Service;
 
 public class DeviceService(IMapper mapper,
+                           IRabbitMQService rabbitMQService,
                            IMediator mediator,
                            ILogger<DeviceService> logger) : IDeviceService
 {
     private readonly IMapper _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
+    private readonly IRabbitMQService _rabbitMQService = rabbitMQService ?? throw new ArgumentNullException(nameof(rabbitMQService));
     private readonly IMediator _mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
     private readonly ILogger<DeviceService> _logger = logger ?? throw new ArgumentNullException(nameof(logger));
 
@@ -33,6 +39,16 @@ public class DeviceService(IMapper mapper,
             var createDeviceCommand = _mapper.Map<CreateDeviceCommand>(deviceDto);
             await _mediator.Send(createDeviceCommand);
             _logger.LogInformation("CreateDevice method succeeded");
+
+            var commandJson = JsonSerializer.Serialize(createDeviceCommand);
+            var rabbitMessage = new RabbitMessage
+            {
+                Id = deviceDto.Id,
+                Title = "New Device Created",
+                Text = $"A new device with ID {deviceDto.Id} has been created.",
+                Payload = commandJson
+            };
+            _rabbitMQService.SendMessage(rabbitMessage);
         }
         catch (Exception ex)
         {

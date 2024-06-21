@@ -65,11 +65,6 @@ public class DevicesController(ILogger<DevicesController> logger,
         try
         {
             deviceDTO.Email = User?.Claims?.FirstOrDefault()?.Value ?? string.Empty;
-            if (deviceDTO.UserId is null)
-            {
-                _logger.LogError("Don't exist User!");
-                return BadRequest();
-            }
             await _deviceService.CreateDevice(deviceDTO);
             _logger.LogInformation("Device created successfully");
             return Ok(deviceDTO);
