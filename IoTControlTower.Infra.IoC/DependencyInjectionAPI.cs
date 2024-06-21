@@ -24,6 +24,10 @@ using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using IoTControlTower.Domain.Interfaces.RabbitRepository;
+using IoTControlTower.Infra.Data.Repositories.RabbitMQRepository;
+using IoTControlTower.Application.Interfaces;
+using IoTControlTower.Application.Services;
 
 namespace IoTControlTower.Infra.IoC;
 
@@ -69,6 +73,11 @@ public static class DependencyInjectionAPI
             services.AddScoped<IUserDapperRepository, UserDapperRepository>();
             services.AddScoped<IDeviceRepository, DeviceEFRepository>();
             services.AddScoped<IDeviceDapperRepository, DeviceDapperRepository>();
+
+            // RabbitMQ
+            services.AddTransient<IRabbitMQService, RabbitMQService>();
+            services.AddTransient<IRabbitMQRepository, RabbitMQRepository>();
+            services.AddSingleton<IRabbitMQConsumerService, RabbitMQConsumerService>();
 
             // UnitOfWork Registration
             services.AddScoped<UnitOfWork>();

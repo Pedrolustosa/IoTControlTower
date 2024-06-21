@@ -22,7 +22,7 @@ public class UserDapperRepository(IDbConnection dbConnection, ILogger<UserDapper
                 throw new ArgumentException("Email cannot be null or empty", nameof(email));
             }
 
-            string query = "SELECT UserId as Id, * FROM AspNetUsers WHERE Email = @email";
+            string query = "SELECT UsersId as Id, * FROM AspNetUsers WHERE Email = @email";
             return await _dbConnection.QueryFirstOrDefaultAsync<User>(query, new { Email = email });
         }
         catch (ArgumentException ex)
