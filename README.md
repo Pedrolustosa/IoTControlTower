@@ -34,6 +34,7 @@ The project follows an architecture based on Clean Architecture and DDD (Domain-
 - **MediatR**: Library for implementing the mediator pattern, used to decouple communication between application components.
 - **Dapper**: Micro ORM used for data access, providing faster execution and lower overhead compared to full ORM frameworks.
 - **Redis**: In-memory data structure store used to cache frequently accessed data for improved performance.
+- **RabbitMQ**: Messaging broker used for asynchronous communication and message queuing.
 
 ## Features
 
@@ -44,6 +45,7 @@ The project follows an architecture based on Clean Architecture and DDD (Domain-
 - **Data Validation**: Using FluentValidation to ensure the integrity and validity of input data.
 - **Email Notifications**: Utilizes NETCore.MailKit for sending email notifications via Google SMTP.
 - **Command Query Responsibility Segregation (CQRS)**: Architecture pattern used to separate command and query operations, improving scalability and flexibility. Implemented using ASP.NET Core 8, MediatR, and Dapper for efficient command and query handling.
+- **Messaging with RabbitMQ**: Integrates RabbitMQ for asynchronous message queuing and communication between application components.
 
 ## Entities and Relationships
 
@@ -108,6 +110,10 @@ To run the project locally, follow the instructions below:
    ```bash
    docker run -d --name redis-stack-server -p 6379:6379 redis/redis-stack-server:latest
    ```
+- To install RabbitMQ [here](https://www.rabbitmq.com/docs/download), you can run the following command:
+  ```bash
+   docker run -it --rm --name rabbitmq -p 5672:5672 -p 15672:15672 rabbitmq:3.13-management
+  ```
 
 # Cloning the Repository
 1. Open the terminal or command prompt.
