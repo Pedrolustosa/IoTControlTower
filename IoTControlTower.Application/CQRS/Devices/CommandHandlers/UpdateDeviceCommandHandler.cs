@@ -1,5 +1,6 @@
 ﻿using MediatR;
 using FluentValidation;
+using System.Text.Json;
 using Microsoft.Extensions.Logging;
 using Microsoft.AspNetCore.Identity;
 using IoTControlTower.Domain.Entities;
@@ -54,7 +55,8 @@ public class UpdateDeviceCommandHandler(UnitOfWork unitOfWork,
             await _unitOfWork.CommitAsync();
 
             _logger.LogInformation("Updating cache for device ID: {Id}", request.Id);
-            await _cachingRepository.UpdateAsync(request.Id.ToString(), existingDevice.ToString());
+            string serializedDevice = JsonSerializer.Serialize(existingDevice);
+            await _cachingRepository.UpdateAsync(request.Id.ToString(), serializedDevice);
 
             _logger.LogInformation("UpdateDeviceCommand handled successfully for device ID: {Id}", request.Id);
             return existingDevice;
