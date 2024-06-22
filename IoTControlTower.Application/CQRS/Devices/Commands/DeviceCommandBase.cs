@@ -10,7 +10,7 @@ public abstract class DeviceCommandBase : IRequest<Device>
     public string? Description { get; set; }
     public string? Manufacturer { get; set; }
     public string? Url { get; set; }
-    public bool? IsActive { get; set; }
+    public bool IsActive { get; set; }
     public DateTime? LastCommunication { get; set; }
     public string? IpAddress { get; set; }
     public string? Location { get; set; }
