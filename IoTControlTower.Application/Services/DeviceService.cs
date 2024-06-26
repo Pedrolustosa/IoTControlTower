@@ -1,15 +1,14 @@
 ﻿using MediatR;
 using AutoMapper;
+using System.Text.Json;
 using Microsoft.Extensions.Logging;
 using IoTControlTower.Domain.Enums;
+using IoTControlTower.Domain.Entities;
 using IoTControlTower.Application.Interface;
+using IoTControlTower.Application.Interfaces;
 using IoTControlTower.Application.DTO.Device;
 using IoTControlTower.Application.CQRS.Devices.Queries;
 using IoTControlTower.Application.CQRS.Devices.Commands;
-using IoTControlTower.Domain.Entities;
-using IoTControlTower.Application.Interfaces;
-using IoTControlTower.Application.Services;
-using System.Text.Json;
 
 namespace IoTControlTower.Application.Service;
 
@@ -43,9 +42,6 @@ public class DeviceService(IMapper mapper,
             var commandJson = JsonSerializer.Serialize(createDeviceCommand);
             var rabbitMessage = new RabbitMessage
             {
-                Id = deviceDto.Id,
-                Title = "New Device Created",
-                Text = $"A new device with ID {deviceDto.Id} has been created.",
                 Payload = commandJson
             };
             _rabbitMQService.SendMessage(rabbitMessage);

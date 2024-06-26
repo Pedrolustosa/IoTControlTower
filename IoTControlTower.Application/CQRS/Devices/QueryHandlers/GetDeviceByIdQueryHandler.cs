@@ -11,9 +11,9 @@ public class GetDeviceByIdQueryHandler(IDeviceDapperRepository devicesDapperRepo
                                        ILogger<GetDeviceByIdQueryHandler> logger,
                                        ICachingRepository cachingRepository) : IRequestHandler<GetDeviceByIdQuery, Device>
 {
-    private readonly ILogger<GetDeviceByIdQueryHandler> _logger = logger;
-    private readonly IDeviceDapperRepository _devicesDapperRepository = devicesDapperRepository;
+    private readonly ILogger<GetDeviceByIdQueryHandler> _logger = logger ?? throw new ArgumentNullException(nameof(logger));
     private readonly ICachingRepository _cachingRepository = cachingRepository ?? throw new ArgumentNullException(nameof(cachingRepository));
+    private readonly IDeviceDapperRepository _devicesDapperRepository = devicesDapperRepository ?? throw new ArgumentNullException(nameof(devicesDapperRepository));
 
     public async Task<Device> Handle(GetDeviceByIdQuery request, CancellationToken cancellationToken)
     {
