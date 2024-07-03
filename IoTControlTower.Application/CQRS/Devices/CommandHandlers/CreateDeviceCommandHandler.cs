@@ -47,10 +47,7 @@ public class CreateDeviceCommandHandler(UnitOfWork unitOfWork,
         }
     }
 
-    private void ValidateCommand(CreateDeviceCommand request)
-    {
-        _validator.ValidateAndThrow(request);
-    }
+    private void ValidateCommand(CreateDeviceCommand request) => _validator.ValidateAndThrow(request);
 
     private async Task<Device> CreateNewDeviceAsync(CreateDeviceCommand request, string userId)
     {
@@ -79,16 +76,9 @@ public class CreateDeviceCommandHandler(UnitOfWork unitOfWork,
         return newDevice;
     }
 
-    private async Task PublishDeviceCreatedNotificationAsync(Device newDevice, CancellationToken cancellationToken)
-    {
-        await _mediator.Publish(new DeviceCreatedNotification(newDevice), cancellationToken);
-    }
+    private async Task PublishDeviceCreatedNotificationAsync(Device newDevice, CancellationToken cancellationToken) => await _mediator.Publish(new DeviceCreatedNotification(newDevice), cancellationToken);
 
-    private async Task<User> GetUserByEmailAsync(string email)
-    {
-        var user = await _userManager.FindByEmailAsync(email);
-        return user ?? throw new DomainExceptions($"User not found for email: {email}");
-    }
+    private async Task<User> GetUserByEmailAsync(string email) => await _userManager.FindByEmailAsync(email) ?? throw new DomainExceptions($"User not found for email: {email}");
 
     private async Task AddDeviceToRepositoryAsync(Device newDevice)
     {
@@ -96,13 +86,7 @@ public class CreateDeviceCommandHandler(UnitOfWork unitOfWork,
         await _unitOfWork.CommitAsync();
     }
 
-    private void HandleValidationException(ValidationException ex)
-    {
-        _logger.LogWarning(ex, "Validation failed for CreateDeviceCommand");
-    }
+    private void HandleValidationException(ValidationException ex) => _logger.LogWarning(ex, "Validation failed for CreateDeviceCommand");
 
-    private void HandleGeneralException(Exception ex)
-    {
-        _logger.LogError(ex, "Error occurred while handling CreateDeviceCommand");
-    }
+    private void HandleGeneralException(Exception ex) => _logger.LogError(ex, "Error occurred while handling CreateDeviceCommand");
 }
