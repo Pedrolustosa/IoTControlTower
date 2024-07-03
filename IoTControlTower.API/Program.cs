@@ -1,6 +1,5 @@
 using Serilog;
 using IoTControlTower.Infra.IoC;
-using IoTControlTower.Application.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 var configuration = builder.Configuration;
