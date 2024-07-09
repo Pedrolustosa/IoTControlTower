@@ -19,7 +19,7 @@ if (true)
 {
     app.UseDeveloperExceptionPage();
     app.UseSwagger();
-    app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "IotControTower.API v1"));
+    app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "IoTControlTower.API v1"));
 }
 app.UseHttpsRedirection();
 app.UseRouting();
