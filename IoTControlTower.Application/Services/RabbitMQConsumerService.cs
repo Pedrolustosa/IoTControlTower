@@ -11,14 +11,11 @@ public class RabbitMQConsumerService(IRabbitMQService rabbitMQService, ILogger<R
     private readonly IRabbitMQService _rabbitMQService = rabbitMQService;
     private readonly ILogger<RabbitMQConsumerService> _logger = logger;
 
-    public void StartConsuming()
-    {
-        _rabbitMQService.ConsumeMessages(OnMessageReceived);
-    }
+    public void StartConsuming() => _rabbitMQService.ConsumeMessages(OnMessageReceived);
 
     private void OnMessageReceived(RabbitMessage message)
     {
-        _logger.LogInformation("Message received: {Title} - {Text}", message.Title, message.Text);
-        var createDeviceCommand = JsonSerializer.Deserialize<CreateDeviceCommand>(message.Text);
+        _logger.LogInformation("Message received: {Payload}", message.Payload);
+        _ = JsonSerializer.Deserialize<CreateDeviceCommand>(message.Payload);
     }
 }
