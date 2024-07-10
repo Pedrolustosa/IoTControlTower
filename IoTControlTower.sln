@@ -3,17 +3,19 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.8.34309.116
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IoTControlTower.API", "IoTControlTower.API\IoTControlTower.API.csproj", "{7B022DBB-FC03-4D62-9942-202DFDC36BE9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IoTControlTower.API", "IoTControlTower.API\IoTControlTower.API.csproj", "{7B022DBB-FC03-4D62-9942-202DFDC36BE9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IoTControlTower.Application", "IoTControlTower.Application\IoTControlTower.Application.csproj", "{7275BFED-773A-4868-8076-399567FF70F7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IoTControlTower.Application", "IoTControlTower.Application\IoTControlTower.Application.csproj", "{7275BFED-773A-4868-8076-399567FF70F7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IoTControlTower.Infra", "IoTControlTower.Infra\IoTControlTower.Infra.csproj", "{ACFCF799-5B7D-4714-B9E5-CF0A71A8018D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IoTControlTower.Infra", "IoTControlTower.Infra\IoTControlTower.Infra.csproj", "{ACFCF799-5B7D-4714-B9E5-CF0A71A8018D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IoTControlTower.Domain", "IoTControlTower.Domain\IoTControlTower.Domain.csproj", "{4934F605-FAE0-415E-AECF-D02AC74AB33D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IoTControlTower.Domain", "IoTControlTower.Domain\IoTControlTower.Domain.csproj", "{4934F605-FAE0-415E-AECF-D02AC74AB33D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IoTControlTower.Infra.IoC", "IoTControlTower.Infra.IoC\IoTControlTower.Infra.IoC.csproj", "{6EC7F16E-B132-4384-89AA-3BE2ED65F660}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IoTControlTower.Infra.IoC", "IoTControlTower.Infra.IoC\IoTControlTower.Infra.IoC.csproj", "{6EC7F16E-B132-4384-89AA-3BE2ED65F660}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{4600B229-6CBE-4269-BA57-B9147C50AC49}"
+EndProject
+Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{4FDFB32E-7E86-48E9-AD89-A01B9B5D54DD}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -41,6 +43,10 @@ Global
 		{6EC7F16E-B132-4384-89AA-3BE2ED65F660}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6EC7F16E-B132-4384-89AA-3BE2ED65F660}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6EC7F16E-B132-4384-89AA-3BE2ED65F660}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4FDFB32E-7E86-48E9-AD89-A01B9B5D54DD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4FDFB32E-7E86-48E9-AD89-A01B9B5D54DD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4FDFB32E-7E86-48E9-AD89-A01B9B5D54DD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4FDFB32E-7E86-48E9-AD89-A01B9B5D54DD}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
