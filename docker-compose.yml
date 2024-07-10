@@ -1,0 +1,37 @@
+version: '3.4'
+
+services:
+  iotcontroltower.api:
+    image: ${DOCKER_REGISTRY-}iotcontroltowerapi
+    build:
+      context: .
+      dockerfile: IoTControlTower.API/Dockerfile
+    environment:
+      - ConnectionStrings__DefaultConnection=Server=sqlserver;Database=IoTControlTowerDB;User=sa;Password=Your_password123;Trusted_Connection=False;TrustServerCertificate=True
+      - ConnectionStringsRedis__Redis=redis:6379
+      - RabbitMQ__HostName=rabbitmq
+      - RabbitMQ__UserName=guest
+      - RabbitMQ__Password=guest
+    depends_on:
+      - redis
+      - sqlserver
+      - rabbitmq
+
+  redis:
+    image: redis
+    ports:
+      - "6379:6379"
+
+  sqlserver:
+    image: mcr.microsoft.com/mssql/server
+    environment:
+      SA_PASSWORD: "Your_password123"
+      ACCEPT_EULA: "Y"
+    ports:
+      - "1433:1433"
+
+  rabbitmq:
+    image: rabbitmq:3-management
+    ports:
+      - "5672:5672"
+      - "15672:15672"
