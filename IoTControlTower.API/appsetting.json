@@ -1,0 +1,48 @@
+{
+  "AllowedHosts": "*",
+  "ConnectionStrings": {
+    "DefaultConnection": "Server=DESKTOP-4CL4V9V;Database=IoTControlTowerDB;Integrated Security=true;TrustServerCertificate=True"
+  },
+  "ConnectionStringsRedis": {
+    "Redis": "localhost:6379"
+  },
+  "RabbitMQ": {
+    "HostName": "rabbitmq",
+    "UserName": "guest",
+    "Password": "guest"
+  },
+  "EmailConfiguration": {
+    "From": "iotcontroltower@gmail.com",
+    "Password": "jdkmhppkegdmzgrw",
+    "Port": 465,
+    "SmtpServer": "smtp.gmail.com",
+    "Username": "iotcontroltower@gmail.com"
+  },
+  "Jwt": {
+    "SecretKey": "this is my custom Secret key for authentication",
+    "Issuer": "IoTControlTower",
+    "Audience": "IoTControlTower"
+  },
+  "Logging": {
+    "LogLevel": {
+      "Default": "Information",
+      "Microsoft.AspNetCore": "Warning"
+    }
+  },
+  "Serilog": {
+    "Using": [ "Serilog.Sinks.Console", "Serilog.Sinks.File" ],
+    "MinimumLevel": "Information",
+    "WriteTo": [
+      {
+        "Name": "Console"
+      },
+      {
+        "Name": "File",
+        "Args": {
+          "path": "Logs/applog-.txt",
+          "rollingInterval": "Day"
+        }
+      }
+    ]
+  }
+}
